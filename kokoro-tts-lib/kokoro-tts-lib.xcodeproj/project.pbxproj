@@ -7,37 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8D46508A2D480DDA00059FC6 /* ESpeakNG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D4650882D480DD200059FC6 /* ESpeakNG.framework */; };
-		8D46508B2D480DDA00059FC6 /* ESpeakNG.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8D4650882D480DD200059FC6 /* ESpeakNG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8D4650992D4E7FC000059FC6 /* ESpeakNG.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D4650982D4E7FC000059FC6 /* ESpeakNG.xcframework */; };
+		8D4650A32D4E808500059FC6 /* KokoroTTSLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D464D812D48068200059FC6 /* KokoroTTSLib.framework */; platformFilter = ios; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		8D4650872D480DD200059FC6 /* PBXContainerItemProxy */ = {
+		8D4650A42D4E808500059FC6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 8D464FCD2D480DD200059FC6 /* espeak-ng.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8D464A1D2D455D0E00059FC6;
-			remoteInfo = "espeak-ng";
+			containerPortal = 8D464D782D48068200059FC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D464D802D48068200059FC6;
+			remoteInfo = "kokoro-tts-lib";
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		8D46508C2D480DDA00059FC6 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				8D46508B2D480DDA00059FC6 /* ESpeakNG.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		8D464D812D48068200059FC6 /* kokoro_tts_lib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = kokoro_tts_lib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8D464FCD2D480DD200059FC6 /* espeak-ng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "espeak-ng.xcodeproj"; path = "../espeak-ng/espeak-ng.xcodeproj"; sourceTree = SOURCE_ROOT; };
+		8D464D812D48068200059FC6 /* KokoroTTSLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KokoroTTSLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D4650982D4E7FC000059FC6 /* ESpeakNG.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ESpeakNG.xcframework; path = ../Frameworks/ESpeakNG.xcframework; sourceTree = "<group>"; };
+		8D46509F2D4E808500059FC6 /* kokoro-tts-lib-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "kokoro-tts-lib-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -59,6 +46,11 @@
 			path = "kokoro-tts-lib";
 			sourceTree = "<group>";
 		};
+		8D4650A02D4E808500059FC6 /* kokoro-tts-lib-tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "kokoro-tts-lib-tests";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +58,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D46508A2D480DDA00059FC6 /* ESpeakNG.framework in Frameworks */,
+				8D4650992D4E7FC000059FC6 /* ESpeakNG.xcframework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D46509C2D4E808500059FC6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D4650A32D4E808500059FC6 /* KokoroTTSLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,8 +76,8 @@
 		8D464D772D48068200059FC6 = {
 			isa = PBXGroup;
 			children = (
-				8D464FCD2D480DD200059FC6 /* espeak-ng.xcodeproj */,
 				8D464D832D48068200059FC6 /* kokoro-tts-lib */,
+				8D4650A02D4E808500059FC6 /* kokoro-tts-lib-tests */,
 				8D4650892D480DDA00059FC6 /* Frameworks */,
 				8D464D822D48068200059FC6 /* Products */,
 			);
@@ -86,15 +86,8 @@
 		8D464D822D48068200059FC6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D464D812D48068200059FC6 /* kokoro_tts_lib.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		8D4650842D480DD200059FC6 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8D4650882D480DD200059FC6 /* ESpeakNG.framework */,
+				8D464D812D48068200059FC6 /* KokoroTTSLib.framework */,
+				8D46509F2D4E808500059FC6 /* kokoro-tts-lib-tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,6 +95,7 @@
 		8D4650892D480DDA00059FC6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8D4650982D4E7FC000059FC6 /* ESpeakNG.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -127,7 +121,6 @@
 				8D464D7D2D48068200059FC6 /* Sources */,
 				8D464D7E2D48068200059FC6 /* Frameworks */,
 				8D464D7F2D48068200059FC6 /* Resources */,
-				8D46508C2D480DDA00059FC6 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -140,8 +133,31 @@
 			packageProductDependencies = (
 			);
 			productName = "kokoro-tts-lib";
-			productReference = 8D464D812D48068200059FC6 /* kokoro_tts_lib.framework */;
+			productReference = 8D464D812D48068200059FC6 /* KokoroTTSLib.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		8D46509E2D4E808500059FC6 /* kokoro-tts-lib-tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8D4650A62D4E808500059FC6 /* Build configuration list for PBXNativeTarget "kokoro-tts-lib-tests" */;
+			buildPhases = (
+				8D46509B2D4E808500059FC6 /* Sources */,
+				8D46509C2D4E808500059FC6 /* Frameworks */,
+				8D46509D2D4E808500059FC6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8D4650A52D4E808500059FC6 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				8D4650A02D4E808500059FC6 /* kokoro-tts-lib-tests */,
+			);
+			name = "kokoro-tts-lib-tests";
+			packageProductDependencies = (
+			);
+			productName = "kokoro-tts-lib-tests";
+			productReference = 8D46509F2D4E808500059FC6 /* kokoro-tts-lib-tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -150,11 +166,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					8D464D802D48068200059FC6 = {
 						CreatedOnToolsVersion = 16.2;
 						LastSwiftMigration = 1620;
+					};
+					8D46509E2D4E808500059FC6 = {
+						CreatedOnToolsVersion = 16.2;
 					};
 				};
 			};
@@ -170,31 +190,23 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8D464D822D48068200059FC6 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 8D4650842D480DD200059FC6 /* Products */;
-					ProjectRef = 8D464FCD2D480DD200059FC6 /* espeak-ng.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				8D464D802D48068200059FC6 /* kokoro-tts-lib */,
+				8D46509E2D4E808500059FC6 /* kokoro-tts-lib-tests */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXReferenceProxy section */
-		8D4650882D480DD200059FC6 /* ESpeakNG.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ESpeakNG.framework;
-			remoteRef = 8D4650872D480DD200059FC6 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
-
 /* Begin PBXResourcesBuildPhase section */
 		8D464D7F2D48068200059FC6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D46509D2D4E808500059FC6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -211,7 +223,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8D46509B2D4E808500059FC6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8D4650A52D4E808500059FC6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = 8D464D802D48068200059FC6 /* kokoro-tts-lib */;
+			targetProxy = 8D4650A42D4E808500059FC6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		8D464D882D48068200059FC6 /* Debug */ = {
@@ -226,6 +254,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
+				FRAMEWORK_SEARCH_PATHS = $PROJECT_DIR/../Frameworks;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -238,7 +267,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kokoro.kokoro-tts-lib";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = KokoroTTSLib;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -264,6 +293,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
+				FRAMEWORK_SEARCH_PATHS = $PROJECT_DIR/../Frameworks;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -276,7 +306,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kokoro.kokoro-tts-lib";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = KokoroTTSLib;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -414,6 +444,36 @@
 			};
 			name = Release;
 		};
+		8D4650A72D4E808500059FC6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kokoro.kokoro-tts-lib-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8D4650A82D4E808500059FC6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kokoro.kokoro-tts-lib-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -431,6 +491,15 @@
 			buildConfigurations = (
 				8D464D882D48068200059FC6 /* Debug */,
 				8D464D892D48068200059FC6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8D4650A62D4E808500059FC6 /* Build configuration list for PBXNativeTarget "kokoro-tts-lib-tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8D4650A72D4E808500059FC6 /* Debug */,
+				8D4650A82D4E808500059FC6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

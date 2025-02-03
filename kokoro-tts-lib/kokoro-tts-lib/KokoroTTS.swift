@@ -1,8 +1,11 @@
 //
 //  kokoro-tts-lib
 //
+import ESpeakNG
 
 public class KokoroTTS {
+    private let espeakNGEngine: ESpeakNGEngine
+    
     public enum VoiceName: String {
         case af
         case afBella
@@ -16,13 +19,10 @@ public class KokoroTTS {
         case afNicole
         case afSky
     }
-    
-    enum LanguageDialect: String {
-        case enUS = "en-us"
-        case enGB = "en-gb"
+        
+    public init() throws {
+        espeakNGEngine = try ESpeakNGEngine()
     }
-    
-    public init() {}
     
     private func dialect(for voice: VoiceName) -> LanguageDialect {
         switch voice {
@@ -34,8 +34,8 @@ public class KokoroTTS {
     }
     
     private func phonemize(text: String, lang: String, normalizeText: Bool = false) -> String {
-        var phonemizedText = normalizeText ? TextNormalizer.normalizeText(text: text) : text
-            
+        var phonemizedText = normalizeText ? TextNormalizer.normalizeText(text) : text
+        
         return phonemizedText
     }
     
