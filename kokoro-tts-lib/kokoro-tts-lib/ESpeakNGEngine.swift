@@ -5,11 +5,15 @@ import Foundation
 import ESpeakNG
 
 class ESpeakNGEngine {
+    private var languageSet = false
+    
     enum ESpeakNGEngineError : Error {
         case dataBundleNotFound
         case couldNotInitialize
         case languageNotFound
         case internalError
+        case languageNotSet
+        case couldNotPhonemize
     }
     
     init() throws {
@@ -27,14 +31,17 @@ class ESpeakNGEngine {
             while let voicePointer = voiceList?.advanced(by: index).pointee {
                 let voice = voicePointer.pointee
                 if let cLang = voice.languages {
-                    languageList.insert(String(cString: cLang))
+                    let language = String(cString: cLang, encoding: .utf8)!
+                        .replacingOccurrences(of: "\u{05}", with: "")
+                        .replacingOccurrences(of: "\u{02}", with: "")
+                    languageList.insert(language)
                 }
                 index += 1
             }
-            
-            for dialect in LanguageDialect.allCases {
-                if !languageList.contains(dialect.rawValue) {
-                    log("Language dialect \(dialect) not found in espeak-ng voice list")
+                        
+            try LanguageDialect.allCases.forEach {
+                if !languageList.contains($0.rawValue) {
+                    log("Language dialect \($0) not found in espeak-ng voice list")
                     throw ESpeakNGEngineError.languageNotFound
                 }
             }
@@ -75,6 +82,38 @@ class ESpeakNGEngine {
             throw ESpeakNGEngineError.languageNotFound
         } else if result != EE_OK {
             throw ESpeakNGEngineError.internalError
+        }
+        
+        languageSet = true
+    }
+    
+    func phonemize(text: String) throws -> String {
+        guard languageSet else {
+            throw ESpeakNGEngineError.languageNotSet
+        }
+        
+        guard !text.isEmpty else {
+            return ""
+        }
+        
+        var textPtr = UnsafeRawPointer((text as NSString).utf8String)
+        let phonemes_mode: Int32 = Int32(Character("_").asciiValue! << 8 | 0x02)
+        
+        let result = withUnsafeMutablePointer(to: &textPtr) { ptr in
+            var resultWords: [String] = []
+            while ptr.pointee != nil {
+                let result = ESpeakNG.espeak_TextToPhonemes(ptr, espeakCHARS_UTF8, phonemes_mode)
+                if let result {
+                    resultWords.append(String(cString: result, encoding: .utf8)!)
+                }
+            }
+            return resultWords
+        }
+        
+        if !result.isEmpty {
+            return result.joined(separator: " ")
+        } else {
+            throw ESpeakNGEngineError.couldNotPhonemize
         }
     }
     

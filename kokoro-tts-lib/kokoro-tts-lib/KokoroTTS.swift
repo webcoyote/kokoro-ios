@@ -33,10 +33,13 @@ public class KokoroTTS {
         }
     }
     
-    private func phonemize(text: String, lang: String, normalizeText: Bool = false) -> String {
-        var phonemizedText = normalizeText ? TextNormalizer.normalizeText(text) : text
-        
-        return phonemizedText
+    func phonemize(text: String, using voice: VoiceName, normalizeText: Bool = true) throws -> String {
+        try espeakNGEngine.setLanguage(dialect(for: voice))
+        let normalizedText = normalizeText ? TextNormalizer.normalizeText(text) : text
+        let punctuator = Punctuation()
+        let (chunks, marks) = punctuator.preserve(text: normalizedText)
+        let phonemizedChunks = try chunks.map { try espeakNGEngine.phonemize(text: $0) }
+        return Punctuation.restore(text: phonemizedChunks, marks: marks, sep: Separator(word: " "), strip: false).joined(separator: "")
     }
     
     public func generate(text: String, voice: VoiceName) {
