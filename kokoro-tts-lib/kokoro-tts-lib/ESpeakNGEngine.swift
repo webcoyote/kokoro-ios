@@ -6,6 +6,7 @@ import ESpeakNG
 
 class ESpeakNGEngine {
     private var languageSet = false
+    private var languageMapping : [String: String] = [:]
     
     enum ESpeakNGEngineError : Error {
         case dataBundleNotFound
@@ -35,7 +36,15 @@ class ESpeakNGEngine {
                         .replacingOccurrences(of: "\u{05}", with: "")
                         .replacingOccurrences(of: "\u{02}", with: "")
                     languageList.insert(language)
+                    
+                    if let cName = voice.identifier {
+                        let name = String(cString: cName, encoding: .utf8)!
+                            .replacingOccurrences(of: "\u{05}", with: "")
+                            .replacingOccurrences(of: "\u{02}", with: "")
+                        languageMapping[language] = name
+                    }
                 }
+                
                 index += 1
             }
                         
@@ -57,26 +66,12 @@ class ESpeakNGEngine {
         log("ESpeakNGEngine termination OK: \(terminateOK == EE_OK)")
     }
     
-    private func createVoiceStruct(_ language: String) -> espeak_VOICE {
-        espeak_VOICE(
-            name: nil,
-            languages: (language as NSString).utf8String,
-            identifier: nil,
-            gender: 0,
-            age: 0,
-            variant: 0,
-            xx1: 0,
-            score: 0,
-            spare: nil
-        )
-    }
-    
     func setLanguage(_ language: LanguageDialect) throws {
-        var voiceStruct = createVoiceStruct(language.rawValue)
-        
-        let result = withUnsafeMutablePointer(to: &voiceStruct) { voicePtr in
-            espeak_SetVoiceByProperties(voicePtr)
+        guard let name = languageMapping[language.rawValue] else {
+            throw ESpeakNGEngineError.languageNotFound
         }
+        
+        let result = espeak_SetVoiceByName((name as NSString).utf8String)
         
         if result == EE_NOT_FOUND {
             throw ESpeakNGEngineError.languageNotFound
@@ -97,8 +92,8 @@ class ESpeakNGEngine {
         }
         
         var textPtr = UnsafeRawPointer((text as NSString).utf8String)
-        let phonemes_mode: Int32 = Int32(Character("_").asciiValue! << 8 | 0x02)
-        
+        let phonemes_mode: Int32 = Int32((Int32(Character("_").asciiValue!) << 8) | 0x02)
+                
         let result = withUnsafeMutablePointer(to: &textPtr) { ptr in
             var resultWords: [String] = []
             while ptr.pointee != nil {

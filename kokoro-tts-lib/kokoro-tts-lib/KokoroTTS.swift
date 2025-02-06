@@ -1,6 +1,7 @@
 //
 //  kokoro-tts-lib
 //
+import Foundation
 import ESpeakNG
 
 public class KokoroTTS {
@@ -34,12 +35,21 @@ public class KokoroTTS {
     }
     
     func phonemize(text: String, using voice: VoiceName, normalizeText: Bool = true) throws -> String {
-        try espeakNGEngine.setLanguage(dialect(for: voice))
+        log("Starting to phonemize text: \(text)")
+        let language = dialect(for: voice)
+        try espeakNGEngine.setLanguage(language)
         let normalizedText = normalizeText ? TextNormalizer.normalizeText(text) : text
+        log("Normalized text: \(normalizedText)")
         let punctuator = Punctuation()
         let (chunks, marks) = punctuator.preserve(text: normalizedText)
-        let phonemizedChunks = try chunks.map { try espeakNGEngine.phonemize(text: $0) }
-        return Punctuation.restore(text: phonemizedChunks, marks: marks, sep: Separator(word: " "), strip: false).joined(separator: "")
+        let phonemizedChunks = try chunks.map {
+            TextNormalizer.postprocess(try espeakNGEngine.phonemize(text: $0), separator: Separator(word: " "), strip: true)
+        }
+        log("Phonemized chunks: \(phonemizedChunks)")
+        let restoredText = Punctuation.restore(text: phonemizedChunks, marks: marks, sep: Separator(word: " "), strip: false).joined(separator: "")
+        let normalizedPhonemizedText = TextNormalizer.postPhonemizeNormalize(text: restoredText, language: language)
+        log("Final output: \(normalizedPhonemizedText)")
+        return normalizedPhonemizedText
     }
     
     public func generate(text: String, voice: VoiceName) {

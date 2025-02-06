@@ -1,8 +1,11 @@
 //
 //  kokoro-tts-lib
 //
+import Foundation
 
 class TextNormalizer {
+    private static let VOCAB = TextNormalizer.getVocab()
+    
     private init() {}
     
     /// Translates a numeric/time string into a “spoken” form.
@@ -104,6 +107,7 @@ class TextNormalizer {
         result = result
             // Replace any whitespace character (other than space or newline) with a space.
             .replacingMatches(pattern: "[^\\S \\n]", with: " ")
+            .replacingMatches(pattern: "\\n", with: "\u{A} ")
             // Collapse multiple spaces.
             .replacingMatches(pattern: " {2,}", with: " ")
             // Remove spaces that occur only between newlines.
@@ -145,6 +149,121 @@ class TextNormalizer {
             .replacingMatches(pattern: "(?i)(?<=[A-Z])\\.(?=[A-Z])", options: [.caseInsensitive], with: "-")
         
         return result.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    /// Builds a vocabulary dictionary mapping each symbol to an integer index.
+    static private func getVocab() -> [Character: Int] {
+        let pad: Character = "$"
+        // The punctuation characters, letters, and IPA symbols are defined as in Python.
+        // (Be sure these strings exactly match your original data.)
+        let punctuation = ";:,.!?¡¿—…\"«»“” "
+        let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        let lettersIPA = "ɑɐɒæɓʙβɔɕçɗɖðʤəɘɚɛɜɝɞɟʄɡɠɢʛɦɧħɥʜɨɪʝɭɬɫɮʟɱɯɰŋɳɲɴøɵɸθœɶʘɹɺɾɻʀʁɽʂʃʈʧʉʊʋⱱʌɣɤʍχʎʏʑʐʒʔʡʕʢǀǁǂǃˈˌːˑʼʴʰʱʲʷˠˤ˞↓↑→↗↘''̩'̩ᵻ"
+        
+        // Combine the symbols into one array.
+        var symbols = [Character]()
+        symbols.append(pad)
+        symbols.append(contentsOf: punctuation)
+        symbols.append(contentsOf: letters)
+        symbols.append(contentsOf: lettersIPA)
+                
+        // Build a dictionary mapping each character to its index.
+        var dict: [Character: Int] = [:]
+        for (i, char) in symbols.enumerated() {
+            dict[char] = i
+        }
+        
+        return dict
+    }
+    
+    static func postPhonemizeNormalize(text: String, language: LanguageDialect) -> String {
+        // Simple string replacements.
+        var normalizedText =
+            text.replacingOccurrences(of: "kəkˈoːɹoʊ", with: "kˈoʊkəɹoʊ")
+                .replacingOccurrences(of: "kəkˈɔːɹəʊ", with: "kˈəʊkəɹəʊ")
+                .replacingOccurrences(of: "ʲ", with: "j")
+                .replacingOccurrences(of: "r", with: "ɹ")
+                .replacingOccurrences(of: "x", with: "k")
+                .replacingOccurrences(of: "ɬ", with: "l")
+        
+        // A helper to perform regex substitutions.
+        func regexReplace(pattern: String, in text: String, with template: String) -> String {
+            do {
+                let regex = try NSRegularExpression(pattern: pattern)
+                let range = NSRange(text.startIndex..<text.endIndex, in: text)
+                return regex.stringByReplacingMatches(in: text, options: [], range: range, withTemplate: template)
+            } catch {
+                print("Regex error for pattern \"\(pattern)\": \(error)")
+                return text
+            }
+        }
+    
+        // Insert a space between a letter (or ɹ or ː) and "hˈʌndɹɪd".
+        normalizedText = regexReplace(pattern: "(?<=[a-zɹː])(?=hˈʌndɹɪd)", in: normalizedText, with: " ")
+        
+        // Remove an extra space before 'z' when it is followed by punctuation or end-of-string.
+        normalizedText = regexReplace(pattern: " z(?=[;:,.!?¡¿—…\"«»“” ]|$)", in: normalizedText, with: "z")
+            
+        if language == .enUS {
+            normalizedText = regexReplace(pattern: "(?<=nˈaɪn)ti(?!ː)", in: normalizedText, with: "di")
+        }
+            
+        // Filter the string so that only characters present in the vocabulary remain.
+        normalizedText = String(normalizedText.filter { VOCAB.keys.contains($0) })
+            
+        return normalizedText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    /// Helper function to perform a regex replacement on a given string.
+    private static func regexReplace(in input: String, pattern: String, with replacement: String) -> String {
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+            return input
+        }
+        let range = NSRange(input.startIndex..<input.endIndex, in: input)
+        return regex.stringByReplacingMatches(in: input, options: [], range: range, withTemplate: replacement)
+    }
+    
+    static func postprocess(_ line: String, separator: Separator, strip: Bool) -> String {
+        // espeak can split an utterance into several lines because of punctuation.
+        // Here we merge the lines into a single one.
+        var line = line.trimmingCharacters(in: .whitespacesAndNewlines)
+        line = line.replacingOccurrences(of: "\n", with: " ")
+        line = line.replacingOccurrences(of: "  ", with: " ")
+        
+        // Due to a bug in espeak-ng, some additional separators can be added at the end of a word.
+        // Here is a quick fix to solve that issue.
+        // See https://github.com/espeak-ng/espeak-ng/issues/694
+        line = regexReplace(in: line, pattern: "_+", with: "_")
+        line = regexReplace(in: line, pattern: "_ ", with: " ")
+        
+        // Process language switch.
+        if line.isEmpty {
+            return ""
+        }
+        
+        var outLine = ""
+        // Split the line into words by space.
+        let words = line.components(separatedBy: " ")
+        for word in words {
+            // If not stripping and there is no tie, append an underscore.
+            if !strip {
+                line += "_"
+            }
+            
+            // Append the processed word and the word separator.
+            outLine += word.replacingOccurrences(of: "_", with: "") + separator.word
+        }
+        
+        // If stripping and the word separator is not empty, remove the last word separator.
+        if strip && !separator.word.isEmpty {
+            outLine = String(outLine.dropLast(separator.word.count))
+        }
+        
+        return outLine
+    }
+    
+    static func tokenize(_ text: String) -> [Int] {
+        text.compactMap { VOCAB[$0] }
     }
 }
 
