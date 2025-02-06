@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		8D4650992D4E7FC000059FC6 /* ESpeakNG.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D4650982D4E7FC000059FC6 /* ESpeakNG.xcframework */; };
 		8D4650A32D4E808500059FC6 /* KokoroTTSLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D464D812D48068200059FC6 /* KokoroTTSLib.framework */; platformFilter = ios; };
+		8DCCF30C2D54C34C009167A6 /* bert_model.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8DCCF30B2D54C34C009167A6 /* bert_model.mlpackage */; };
+		8DCCF3132D54D768009167A6 /* bert_encoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8DCCF3122D54D768009167A6 /* bert_encoder.mlpackage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,6 +27,8 @@
 		8D464D812D48068200059FC6 /* KokoroTTSLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KokoroTTSLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D4650982D4E7FC000059FC6 /* ESpeakNG.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ESpeakNG.xcframework; path = ../Frameworks/ESpeakNG.xcframework; sourceTree = "<group>"; };
 		8D46509F2D4E808500059FC6 /* kokoro-tts-lib-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "kokoro-tts-lib-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DCCF30B2D54C34C009167A6 /* bert_model.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = bert_model.mlpackage; sourceTree = "<group>"; };
+		8DCCF3122D54D768009167A6 /* bert_encoder.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = bert_encoder.mlpackage; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -76,6 +80,7 @@
 		8D464D772D48068200059FC6 = {
 			isa = PBXGroup;
 			children = (
+				8DCCF3082D54C07D009167A6 /* mlmodels */,
 				8D464D832D48068200059FC6 /* kokoro-tts-lib */,
 				8D4650A02D4E808500059FC6 /* kokoro-tts-lib-tests */,
 				8D4650892D480DDA00059FC6 /* Frameworks */,
@@ -98,6 +103,15 @@
 				8D4650982D4E7FC000059FC6 /* ESpeakNG.xcframework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8DCCF3082D54C07D009167A6 /* mlmodels */ = {
+			isa = PBXGroup;
+			children = (
+				8DCCF30B2D54C34C009167A6 /* bert_model.mlpackage */,
+				8DCCF3122D54D768009167A6 /* bert_encoder.mlpackage */,
+			);
+			path = mlmodels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -220,6 +234,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DCCF30C2D54C34C009167A6 /* bert_model.mlpackage in Sources */,
+				8DCCF3132D54D768009167A6 /* bert_encoder.mlpackage in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
