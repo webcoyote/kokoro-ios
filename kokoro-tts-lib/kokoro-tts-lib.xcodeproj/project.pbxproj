@@ -11,6 +11,8 @@
 		8D4650A32D4E808500059FC6 /* KokoroTTSLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D464D812D48068200059FC6 /* KokoroTTSLib.framework */; platformFilter = ios; };
 		8DCCF30C2D54C34C009167A6 /* bert_model.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8DCCF30B2D54C34C009167A6 /* bert_model.mlpackage */; };
 		8DCCF3132D54D768009167A6 /* bert_encoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8DCCF3122D54D768009167A6 /* bert_encoder.mlpackage */; };
+		8DEF85902D5676FB000E3CE4 /* predictor_text_encoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF858F2D5676FB000E3CE4 /* predictor_text_encoder.mlpackage */; };
+		8DEF85922D567959000E3CE4 /* predictor_lstm.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF85912D567959000E3CE4 /* predictor_lstm.mlpackage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,10 +31,12 @@
 		8D46509F2D4E808500059FC6 /* kokoro-tts-lib-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "kokoro-tts-lib-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DCCF30B2D54C34C009167A6 /* bert_model.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = bert_model.mlpackage; sourceTree = "<group>"; };
 		8DCCF3122D54D768009167A6 /* bert_encoder.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = bert_encoder.mlpackage; sourceTree = "<group>"; };
+		8DEF858F2D5676FB000E3CE4 /* predictor_text_encoder.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = predictor_text_encoder.mlpackage; sourceTree = "<group>"; };
+		8DEF85912D567959000E3CE4 /* predictor_lstm.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = predictor_lstm.mlpackage; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		8D464D862D48068200059FC6 /* Exceptions for "kokoro-tts-lib" folder in "kokoro-tts-lib" target */ = {
+		8D464D862D48068200059FC6 /* Exceptions for "Kokoro-tts-lib" folder in "kokoro-tts-lib" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			publicHeaders = (
 				kokoro_tts_lib.h,
@@ -42,17 +46,17 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		8D464D832D48068200059FC6 /* kokoro-tts-lib */ = {
+		8D464D832D48068200059FC6 /* Kokoro-tts-lib */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				8D464D862D48068200059FC6 /* Exceptions for "kokoro-tts-lib" folder in "kokoro-tts-lib" target */,
+				8D464D862D48068200059FC6 /* Exceptions for "Kokoro-tts-lib" folder in "kokoro-tts-lib" target */,
 			);
-			path = "kokoro-tts-lib";
+			path = "Kokoro-tts-lib";
 			sourceTree = "<group>";
 		};
-		8D4650A02D4E808500059FC6 /* kokoro-tts-lib-tests */ = {
+		8D4650A02D4E808500059FC6 /* Kokoro-tts-lib-tests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "kokoro-tts-lib-tests";
+			path = "Kokoro-tts-lib-tests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -80,9 +84,9 @@
 		8D464D772D48068200059FC6 = {
 			isa = PBXGroup;
 			children = (
-				8DCCF3082D54C07D009167A6 /* mlmodels */,
-				8D464D832D48068200059FC6 /* kokoro-tts-lib */,
-				8D4650A02D4E808500059FC6 /* kokoro-tts-lib-tests */,
+				8DCCF3082D54C07D009167A6 /* MLModels */,
+				8D464D832D48068200059FC6 /* Kokoro-tts-lib */,
+				8D4650A02D4E808500059FC6 /* Kokoro-tts-lib-tests */,
 				8D4650892D480DDA00059FC6 /* Frameworks */,
 				8D464D822D48068200059FC6 /* Products */,
 			);
@@ -105,13 +109,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		8DCCF3082D54C07D009167A6 /* mlmodels */ = {
+		8DCCF3082D54C07D009167A6 /* MLModels */ = {
 			isa = PBXGroup;
 			children = (
+				8DEF858F2D5676FB000E3CE4 /* predictor_text_encoder.mlpackage */,
+				8DEF85912D567959000E3CE4 /* predictor_lstm.mlpackage */,
 				8DCCF30B2D54C34C009167A6 /* bert_model.mlpackage */,
 				8DCCF3122D54D768009167A6 /* bert_encoder.mlpackage */,
 			);
-			path = mlmodels;
+			path = MLModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,7 +147,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				8D464D832D48068200059FC6 /* kokoro-tts-lib */,
+				8D464D832D48068200059FC6 /* Kokoro-tts-lib */,
 			);
 			name = "kokoro-tts-lib";
 			packageProductDependencies = (
@@ -164,7 +170,7 @@
 				8D4650A52D4E808500059FC6 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				8D4650A02D4E808500059FC6 /* kokoro-tts-lib-tests */,
+				8D4650A02D4E808500059FC6 /* Kokoro-tts-lib-tests */,
 			);
 			name = "kokoro-tts-lib-tests";
 			packageProductDependencies = (
@@ -234,8 +240,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DEF85922D567959000E3CE4 /* predictor_lstm.mlpackage in Sources */,
 				8DCCF30C2D54C34C009167A6 /* bert_model.mlpackage in Sources */,
 				8DCCF3132D54D768009167A6 /* bert_encoder.mlpackage in Sources */,
+				8DEF85902D5676FB000E3CE4 /* predictor_text_encoder.mlpackage in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
