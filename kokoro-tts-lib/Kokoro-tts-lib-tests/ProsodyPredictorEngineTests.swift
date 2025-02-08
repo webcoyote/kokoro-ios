@@ -32,8 +32,16 @@ struct ProsodyPredictorEngineTests {
         
         let realOutput = try! MLMultiArray.read3DArrayFromJson(bundle: testBundle, file: "d", shape: [1, 143, 640])!
         
-        let closeEnough2 = MLMultiArray.allClose(output, realOutput, rtol: 1e-4, atol: 1e-4)
-        #expect(closeEnough2)
+        let closeEnough = MLMultiArray.allClose(output, realOutput, rtol: 1e-4, atol: 1e-4)
+        #expect(closeEnough)
+    }
+    
+    @Test func testLSTM() throws {
+        let realInput = try! MLMultiArray.read3DArrayFromJson(bundle: testBundle, file: "d", shape: [1, 143, 640])!
+        let output = try prosodyPredictor.executeLSTM(input: realInput)
+        let realOutput = try! MLMultiArray.read3DArrayFromJson(bundle: testBundle, file: "x", shape: [1, 143, 512])!
+        let closeEnough = MLMultiArray.allClose(output, realOutput, rtol: 1e-4, atol: 1e-4)
+        #expect(closeEnough)
     }
 
     @Test func testCalculateDuration() throws {
