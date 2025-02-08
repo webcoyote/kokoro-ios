@@ -1,10 +1,7 @@
 # Kokoro TTS for iOS
 
-Experimental implementation of Kokoro TTS for iOS devices to see if latest iOS devices could run it
+Experimental implementation of Kokoro TTS for iOS devices using CoreML.
 
-Implementation has not been completed, lot of missing parts and stuff to do!
-
-Done:
-
-- [x] espeak-ng is compiling and working on iOS
-
+Currently futher work is blocked because of these two CoreML Tools issues that prevent to convert parts of the model to CoreML:
+- [torch.nn.ConvTranspose1d Conversion failed](https://github.com/apple/coremltools/issues/1946)
+- [Adding support for complex numbers (e.g. 'torch.complex', 'torch.view_as_real', etc.) for PyTorch](https://github.com/apple/coremltools/issues/1539)
