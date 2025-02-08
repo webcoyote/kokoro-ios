@@ -9,11 +9,11 @@ public class KokoroTTS {
     enum KokoroTTSError: Error {
         case failedToLoadVoiceModel
     }
-    private let espeakNGEngine: ESpeakNGEngine
-    private let bertModel: BertModel
-    private let prosodyPredictorEngine: ProsodyPredictorEngine
+    let espeakNGEngine: ESpeakNGEngine
+    let bertModel: BertModel
+    let prosodyPredictorEngine: ProsodyPredictorEngine
     
-    private var voiceDataCache: [VoiceName: MLMultiArray] = [:]
+    var voiceDataCache: [VoiceName: MLMultiArray] = [:]
     
     public enum VoiceName: String {
         case af
@@ -72,9 +72,11 @@ public class KokoroTTS {
     
     func voiceData(for voice: VoiceName) throws -> MLMultiArray {
         if voiceDataCache[voice] == nil {
+            let bundle = Bundle(for: KokoroTTS.self)
+            
             switch voice {
             case .af:
-                voiceDataCache[voice] = try loadVoicePackJSON(fileName: "voicepack_af_weights")
+                voiceDataCache[voice] = try MLMultiArray.read3DArrayFromJson(bundle: bundle, file: "voicepack_af_weights", shape: [511, 1, 256]) 
             }
         }
         return voiceDataCache[voice]!
@@ -115,6 +117,10 @@ public class KokoroTTS {
             inputLength: Int32(tokenizedText.count),
             textMask: textMask)
         
-        let lstmOutput = try prosodyPredictorEngine.executeLSTM(input: textEncoderOutput)        
+        let lstmOutput = try prosodyPredictorEngine.executeLSTM(input: textEncoderOutput)
+        let predictorOutput = try prosodyPredictorEngine.executeDurationProj(input: lstmOutput)
+        let durationProj = try prosodyPredictorEngine.executeDurationProj(input: lstmOutput)
+        let duration = try prosodyPredictorEngine.calculateDuration(input: durationProj)
+        let roundAndClamp = try prosodyPredictorEngine.roundAndClamp(input: duration)        
     }
 }
