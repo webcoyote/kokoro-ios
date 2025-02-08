@@ -114,17 +114,12 @@ class ProsodyPredictorEngine {
             }
             cFrame += duration
         }
-        
-        print("ASDFADSFDSA ", predAlnTrg.shape)
-                
+                        
         guard let dTransposed = try? textEncoderOutput.transposeLastTwoDimensions(),
               let predAlnTrgExpanded = predAlnTrg.expandDimsFrom2Dto3D() else {
             throw ProsodyPredictionError.couldNotCreateArray
         }
-        
-        print("DRTR ", dTransposed.shape)
-        print("ORED ", predAlnTrgExpanded.shape)
-        
+                
         guard let en = batchedMatMul(dTransposed, predAlnTrgExpanded) else {
             throw ProsodyPredictionError.couldNotCreateArray
         }

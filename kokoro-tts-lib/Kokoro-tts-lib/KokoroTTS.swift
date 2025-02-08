@@ -119,8 +119,13 @@ public class KokoroTTS {
         
         let lstmOutput = try prosodyPredictorEngine.executeLSTM(input: textEncoderOutput)
         let predictorOutput = try prosodyPredictorEngine.executeDurationProj(input: lstmOutput)
-        let durationProj = try prosodyPredictorEngine.executeDurationProj(input: lstmOutput)
+        let durationProj = try prosodyPredictorEngine.executeDurationProj(input: predictorOutput)
         let duration = try prosodyPredictorEngine.calculateDuration(input: durationProj)
-        let roundAndClamp = try prosodyPredictorEngine.roundAndClamp(input: duration)        
+        let (roundAndClamp, predDurSum) = try prosodyPredictorEngine.roundAndClamp(input: duration)
+        let processAlignment = try prosodyPredictorEngine.processAlignment(
+            inputLengths: tokenizedText.count,
+            predDurSum: predDurSum,
+            predDur: durationProj,
+            textEncoderOutput: textEncoderOutput)
     }
 }

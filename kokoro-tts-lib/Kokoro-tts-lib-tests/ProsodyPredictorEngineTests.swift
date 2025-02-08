@@ -43,45 +43,37 @@ struct ProsodyPredictorEngineTests {
         let closeEnough = MLMultiArray.allClose(output, realOutput, rtol: 1e-4, atol: 1e-4)
         #expect(closeEnough)
     }
+    
+    @Test func testDurationProjection() throws {
+        let realInput = try! MLMultiArray.read3DArrayFromJson(bundle: testBundle, file: "x", shape: [1, 143, 512])!
+        let output = try prosodyPredictor.executeDurationProj(input: realInput)
+        let realOutput = try MLMultiArray.read3DArrayFromJson(bundle: testBundle, file: "duration_input", shape: [1, 143, 50])!
+        let closeEnough = MLMultiArray.allClose(output, realOutput, rtol: 1e-4, atol: 1e-4)
+        #expect(closeEnough)
+    }
 
     @Test func testCalculateDuration() throws {
-        guard let durationInput = try MLMultiArray.read3DArrayFromJson(bundle: testBundle, file: "duration_input", shape: [1, 143, 50]),
-              let durationRealOutput = try MLMultiArray.read2DArrayFromJson(bundle: testBundle, file: "duration_output", shape: [1, 143]),
-              let roundAndClampRealOutput = try MLMultiArray.read2DArrayFromJson(bundle: testBundle, file: "round_and_clamp_output", shape: [1, 143])
-        else {
-            Issue.record("Could not load duration input")
-            return
-        }
+        let realInput = try! MLMultiArray.read3DArrayFromJson(bundle: testBundle, file: "duration_input", shape: [1, 143, 50])!
+        let output1 = try prosodyPredictor.calculateDuration(input: realInput)
+        let (output, _) = try prosodyPredictor.roundAndClamp(input: output1)
+        let realOutput = try! MLMultiArray.read2DArrayFromJson(bundle: testBundle, file: "round_and_clamp_output", shape: [1, 143])!
+        let closeEnough = MLMultiArray.allClose(output, realOutput, rtol: 1e-8, atol: 1e-8)
+        #expect(closeEnough)
+    }
+    
+    @Test func testProcessAlignment() throws {
+        let predDur = try! MLMultiArray.read2DArrayFromJson(bundle: testBundle, file: "round_and_clamp_output", shape: [1, 143])!
+        let d = try! MLMultiArray.read3DArrayFromJson(bundle: testBundle, file: "d", shape: [1, 143, 640])!
+        let predDurSum = 347
+
+        let output = try prosodyPredictor.processAlignment(
+            inputLengths: 143,
+            predDurSum: predDurSum,
+            predDur: predDur,
+            textEncoderOutput: d)
         
-        
-        let duration = try prosodyPredictor.calculateDuration(input: durationInput)
-        #expect(duration == durationRealOutput)
-        
-        let roundAndClampOutput: MLMultiArray
-        let durationSum: Int
-        
-        (roundAndClampOutput, durationSum) = try prosodyPredictor.roundAndClamp(input: duration)
-        #expect(roundAndClampOutput == roundAndClampRealOutput)
-        
-        // Test code
-        print("DUR SUM ", durationSum)
-        let predAlnTrgShape = [143, durationSum] as [NSNumber]
-        let predAlnTrg = try MLMultiArray(shape: predAlnTrgShape, dataType: .float32)
-        for i in 0..<predAlnTrg.count { predAlnTrg[i] = 0 }
-        
-        var cFrame = 0
-        for i in 0..<143 {
-            let duration = roundAndClampOutput[i].intValue
-            for j in cFrame..<cFrame + duration {
-                predAlnTrg[i * durationSum + j] = 1
-            }
-            cFrame += duration
-        }
-        
-        let expectedOutput = try MLMultiArray.read2DArrayFromJson(bundle: testBundle, file: "pred_aln_trg_output", shape: [143, 347])
-        
-        #expect(predAlnTrg.shape == expectedOutput!.shape)
-        
-        #expect(predAlnTrg == expectedOutput)
+        let realOutput = try! MLMultiArray.read3DArrayFromJson(bundle: testBundle, file: "en", shape: [1, 640, 347])!
+        let closeEnough = MLMultiArray.allClose(output, realOutput, rtol: 1e-3, atol: 1e-3)
+        #expect(closeEnough)
     }
 }

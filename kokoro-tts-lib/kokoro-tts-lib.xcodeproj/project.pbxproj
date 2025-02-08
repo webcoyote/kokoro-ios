@@ -9,14 +9,11 @@
 /* Begin PBXBuildFile section */
 		8D4650992D4E7FC000059FC6 /* ESpeakNG.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D4650982D4E7FC000059FC6 /* ESpeakNG.xcframework */; };
 		8D4650A32D4E808500059FC6 /* KokoroTTSLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D464D812D48068200059FC6 /* KokoroTTSLib.framework */; platformFilter = ios; };
-		8DEF85942D567D64000E3CE4 /* predictor_duration_proj.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF85932D567D64000E3CE4 /* predictor_duration_proj.mlpackage */; };
-		8DEF85AC2D575CEF000E3CE4 /* MLX in Frameworks */ = {isa = PBXBuildFile; productRef = 8DEF85AB2D575CEF000E3CE4 /* MLX */; };
-		8DEF85AE2D575CEF000E3CE4 /* MLXFast in Frameworks */ = {isa = PBXBuildFile; productRef = 8DEF85AD2D575CEF000E3CE4 /* MLXFast */; };
-		8DEF85B02D575CEF000E3CE4 /* MLXLinalg in Frameworks */ = {isa = PBXBuildFile; productRef = 8DEF85AF2D575CEF000E3CE4 /* MLXLinalg */; };
 		8DEF85BE2D577400000E3CE4 /* bert_model.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF85BD2D577400000E3CE4 /* bert_model.mlpackage */; };
 		8DEF85C22D57A220000E3CE4 /* bert_encoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF85C12D57A220000E3CE4 /* bert_encoder.mlpackage */; };
 		8DEF85C62D57A808000E3CE4 /* predictor_text_encoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF85C52D57A808000E3CE4 /* predictor_text_encoder.mlpackage */; };
 		8DEF85D22D57B5F7000E3CE4 /* predictor_lstm.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF85D12D57B5F7000E3CE4 /* predictor_lstm.mlpackage */; };
+		8DEF85D42D57B894000E3CE4 /* predictor_duration_proj.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF85D32D57B894000E3CE4 /* predictor_duration_proj.mlpackage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,11 +30,11 @@
 		8D464D812D48068200059FC6 /* KokoroTTSLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KokoroTTSLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D4650982D4E7FC000059FC6 /* ESpeakNG.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ESpeakNG.xcframework; path = ../Frameworks/ESpeakNG.xcframework; sourceTree = "<group>"; };
 		8D46509F2D4E808500059FC6 /* kokoro-tts-lib-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "kokoro-tts-lib-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8DEF85932D567D64000E3CE4 /* predictor_duration_proj.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = predictor_duration_proj.mlpackage; sourceTree = "<group>"; };
 		8DEF85BD2D577400000E3CE4 /* bert_model.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = bert_model.mlpackage; sourceTree = "<group>"; };
 		8DEF85C12D57A220000E3CE4 /* bert_encoder.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = bert_encoder.mlpackage; sourceTree = "<group>"; };
 		8DEF85C52D57A808000E3CE4 /* predictor_text_encoder.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = predictor_text_encoder.mlpackage; sourceTree = "<group>"; };
 		8DEF85D12D57B5F7000E3CE4 /* predictor_lstm.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = predictor_lstm.mlpackage; sourceTree = "<group>"; };
+		8DEF85D32D57B894000E3CE4 /* predictor_duration_proj.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = predictor_duration_proj.mlpackage; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -71,9 +68,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DEF85AE2D575CEF000E3CE4 /* MLXFast in Frameworks */,
-				8DEF85B02D575CEF000E3CE4 /* MLXLinalg in Frameworks */,
-				8DEF85AC2D575CEF000E3CE4 /* MLX in Frameworks */,
 				8D4650992D4E7FC000059FC6 /* ESpeakNG.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -122,7 +116,7 @@
 			children = (
 				8DEF85BD2D577400000E3CE4 /* bert_model.mlpackage */,
 				8DEF85D12D57B5F7000E3CE4 /* predictor_lstm.mlpackage */,
-				8DEF85932D567D64000E3CE4 /* predictor_duration_proj.mlpackage */,
+				8DEF85D32D57B894000E3CE4 /* predictor_duration_proj.mlpackage */,
 				8DEF85C52D57A808000E3CE4 /* predictor_text_encoder.mlpackage */,
 				8DEF85C12D57A220000E3CE4 /* bert_encoder.mlpackage */,
 			);
@@ -160,9 +154,6 @@
 			);
 			name = "kokoro-tts-lib";
 			packageProductDependencies = (
-				8DEF85AB2D575CEF000E3CE4 /* MLX */,
-				8DEF85AD2D575CEF000E3CE4 /* MLXFast */,
-				8DEF85AF2D575CEF000E3CE4 /* MLXLinalg */,
 			);
 			productName = "kokoro-tts-lib";
 			productReference = 8D464D812D48068200059FC6 /* KokoroTTSLib.framework */;
@@ -220,7 +211,6 @@
 			mainGroup = 8D464D772D48068200059FC6;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				8DEF85AA2D575CEF000E3CE4 /* XCRemoteSwiftPackageReference "mlx-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8D464D822D48068200059FC6 /* Products */;
@@ -259,7 +249,7 @@
 				8DEF85C62D57A808000E3CE4 /* predictor_text_encoder.mlpackage in Sources */,
 				8DEF85C22D57A220000E3CE4 /* bert_encoder.mlpackage in Sources */,
 				8DEF85D22D57B5F7000E3CE4 /* predictor_lstm.mlpackage in Sources */,
-				8DEF85942D567D64000E3CE4 /* predictor_duration_proj.mlpackage in Sources */,
+				8DEF85D42D57B894000E3CE4 /* predictor_duration_proj.mlpackage in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,35 +535,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		8DEF85AA2D575CEF000E3CE4 /* XCRemoteSwiftPackageReference "mlx-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ml-explore/mlx-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.21.2;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		8DEF85AB2D575CEF000E3CE4 /* MLX */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8DEF85AA2D575CEF000E3CE4 /* XCRemoteSwiftPackageReference "mlx-swift" */;
-			productName = MLX;
-		};
-		8DEF85AD2D575CEF000E3CE4 /* MLXFast */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8DEF85AA2D575CEF000E3CE4 /* XCRemoteSwiftPackageReference "mlx-swift" */;
-			productName = MLXFast;
-		};
-		8DEF85AF2D575CEF000E3CE4 /* MLXLinalg */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8DEF85AA2D575CEF000E3CE4 /* XCRemoteSwiftPackageReference "mlx-swift" */;
-			productName = MLXLinalg;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8D464D782D48068200059FC6 /* Project object */;
 }
