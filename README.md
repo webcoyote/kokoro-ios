@@ -1,7 +1,5 @@
 # Kokoro TTS for iOS
 
-## Introduction
-
 Experimental implementation of Kokoro TTS for iOS devices using MLX Swift and eSpeak NG.
 
 Kokoro TTS port is based on the great work done in [MLX-Audio project](https://github.com/Blaizzy/mlx-audio), where the Kokoro TTS model was ported from PyTorch to MLX Python. This project ports the MLX Python code to MLX Swift so that the model can be run in iOS devices.
