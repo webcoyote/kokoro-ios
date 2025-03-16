@@ -20,7 +20,16 @@
 #ifndef ESPEAK_NG_SPEECH_H
 #define ESPEAK_NG_SPEECH_H
 
-#include <endian.h>               // for BYTE_ORDER, BIG_ENDIAN
+#ifdef __APPLE__
+    #include <TargetConditionals.h>
+#endif
+
+#if TARGET_OS_MAC
+    #include <machine/endian.h>               // for BYTE_ORDER, BIG_ENDIAN
+#else
+    #include <endian.h>               // for BYTE_ORDER, BIG_ENDIAN
+#endif
+
 #include <espeak-ng/espeak_ng.h>
 
 #if defined(__has_feature)

@@ -29,7 +29,15 @@
 #ifdef HAVE_SYS_ENDIAN_H
 #include <sys/endian.h>
 #else
-#include <endian.h>
+#ifdef __APPLE__
+    #include <TargetConditionals.h>
+#endif
+
+#if TARGET_OS_MAC
+    #include <machine/endian.h>               // for BYTE_ORDER, BIG_ENDIAN
+#else
+    #include <endian.h>               // for BYTE_ORDER, BIG_ENDIAN
+#endif
 #include "portable_endian.h"
 #endif
 
