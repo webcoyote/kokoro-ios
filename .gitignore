@@ -3,3 +3,4 @@ xcuserdata
 xcshareddata
 project.xcworkspace
 Frameworks/
+mlxtest/mlxtest/Resources/kokoro-v1_0.safetensors
