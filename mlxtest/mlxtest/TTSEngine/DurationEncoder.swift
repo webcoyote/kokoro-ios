@@ -8,10 +8,10 @@ import MLXNN
 //
 class DurationEncoder {
   var lstms: [Module] = []
-  
+
   //
   init(weights: [String: MLXArray], dModel: Int, styDim: Int, nlayers: Int) {
-    for i in 0..<nlayers {
+    for i in 0 ..< nlayers {
       if i % 2 == 0 {
         lstms.append(
           LSTM(inputSize: dModel + styDim,
@@ -27,19 +27,19 @@ class DurationEncoder {
         )
       } else {
         lstms.append(AdaLayerNorm(weight: weights["predictor.text_encoder.lstms.\(i).fc.weight"]!,
-                                  bias:  weights["predictor.text_encoder.lstms.\(i).fc.bias"]!))
+                                  bias: weights["predictor.text_encoder.lstms.\(i).fc.bias"]!))
       }
     }
   }
-   
-  // 
-  func callAsFunction(_ x: MLXArray, style: MLXArray, textLengths: MLXArray, m: MLXArray) -> MLXArray {
+
+  //
+  func callAsFunction(_ x: MLXArray, style: MLXArray, textLengths _: MLXArray, m: MLXArray) -> MLXArray {
     var x = x.transposed(2, 0, 1)
     let s = MLX.broadcast(style, to: [x.shape[0], x.shape[1], style.shape[style.shape.count - 1]])
     x = MLX.concatenated([x, s], axis: -1)
     x = MLX.where(m.expandedDimensions(axes: [-1]).transposed(1, 0, 2), MLXArray.zeros(like: x), x)
     x = x.transposed(1, 2, 0)
-            
+
     for block in lstms {
       if let adaLayerNorm = block as? AdaLayerNorm {
         x = adaLayerNorm(x.transposed(0, 2, 1), style).transposed(0, 2, 1)
@@ -50,11 +50,11 @@ class DurationEncoder {
         let (lstmOutput, _) = lstm(x)
         x = lstmOutput.transposed(0, 2, 1)
         let xPad = MLXArray.zeros([x.shape[0], x.shape[1], m.shape[m.shape.count - 1]])
-        xPad[0..<x.shape[0], 0..<x.shape[1], 0..<x.shape[2]] = x
+        xPad[0 ..< x.shape[0], 0 ..< x.shape[1], 0 ..< x.shape[2]] = x
         x = xPad
       }
     }
-    
+
     return x.transposed(0, 2, 1)
   }
 }
