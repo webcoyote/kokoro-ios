@@ -19,15 +19,13 @@ class MLXTestModel: ObservableObject {
     let audio = audioBuffer[0].asArray(Float.self)
 
     let sampleRate = 24000.0
-    let audioLength = Double(audio.count) / sampleRate
-    //print("Audio length: " + String(format: "%.4f", audioLength))
-
-    //print("\(mainTimer!.deltaTime)")
-    //print("Speed: " + String(format: "%.2f", audioLength / mainTimer!.deltaTime))
+    let audioLength = Double(audio.count) / sampleRate    
+    logPrint("Audio Length: " + String(format: "%.4f", audioLength))
+    logPrint("Real Time Factor: " + String(format: "%.2f", audioLength / (BenchmarkTimer.getTimeInSec(KokoroTTS.Constants.bm_TTS) ?? 1.0)))
 
     let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)!
     guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(audio.count)) else {
-      print("Couldn't create buffer")
+      logPrint("Couldn't create buffer")
       return
     }
 
@@ -41,7 +39,7 @@ class MLXTestModel: ObservableObject {
     do {
       try audioEngine.start()
     } catch {
-      print("Audio engine failed to start: \(error.localizedDescription)")
+      logPrint("Audio engine failed to start: \(error.localizedDescription)")
       return
     }
 

@@ -92,6 +92,9 @@ public class KokoroTTS {
       chosenVoice = voice
     }
 
+    BenchmarkTimer.reset()
+    BenchmarkTimer.startTimer(Constants.bm_TTS)
+    BenchmarkTimer.startTimer(Constants.bm_Phonemize, Constants.bm_TTS)
     let outputStr = try! eSpeakEngine.phonemize(text: text)
 
     let inputIds = Tokenizer.tokenize(phonemizedText: outputStr)
@@ -110,13 +113,16 @@ public class KokoroTTS {
     let swiftTextMask: [Bool] = textMask.asArray(Bool.self)
     let swiftTextMaskInt = swiftTextMask.map { !$0 ? 1 : 0 }
     let attentionMask = MLXArray(swiftTextMaskInt).reshaped(textMask.shape)
+    BenchmarkTimer.stopTimer(Constants.bm_Phonemize, [attentionMask, paddedInputIds])
 
+    BenchmarkTimer.startTimer(Constants.bm_bert, Constants.bm_TTS)
     let (bertDur, _) = bert(paddedInputIds, attentionMask: attentionMask)
     let dEn = bertEncoder(bertDur).transposed(0, 2, 1)
+    BenchmarkTimer.stopTimer(Constants.bm_bert, [dEn])
 
+    BenchmarkTimer.startTimer(Constants.bm_duration, Constants.bm_TTS)
     let refS = self.voice[inputIds.count - 1, 0 ... 1, 0...]
     let s = refS[0 ... 1, 128...]
-
     let d = durationEncoder(dEn, style: s, textLengths: inputLengths, m: textMask)
     let (x, _) = predictorLSTM(d)
     let duration = durationProj(x)
@@ -138,16 +144,32 @@ public class KokoroTTS {
     let predAlnTrg = MLXArray(swiftPredAlnTrg).reshaped([paddedInputIds.shape[1], indices.shape[0]])
     let predAlnTrgBatched = predAlnTrg.expandedDimensions(axis: 0)
     let en = d.transposed(0, 2, 1).matmul(predAlnTrgBatched)
+    BenchmarkTimer.stopTimer(Constants.bm_duration, [en, s])
 
+    BenchmarkTimer.startTimer(Constants.bm_prosody, Constants.bm_TTS)
     let (F0Pred, NPred) = prosodyPredictor.F0NTrain(x: en, s: s)
     let tEn = textEncoder(paddedInputIds, inputLengths: inputLengths, m: textMask)
     let asr = MLX.matmul(tEn, predAlnTrg)
+    BenchmarkTimer.stopTimer(Constants.bm_prosody, [asr, F0Pred, NPred])
 
+    BenchmarkTimer.startTimer(Constants.bm_decoder, Constants.bm_TTS)
     let audio = decoder(asr: asr, F0Curve: F0Pred, N: NPred, s: refS[0 ... 1, 0 ... 127])[0]
+    BenchmarkTimer.stopTimer(Constants.bm_decoder, [audio])
+    
+    BenchmarkTimer.stopTimer(Constants.bm_TTS)
+    BenchmarkTimer.print()
+    
     return audio
   }
 
   struct Constants {
-    static let maxTokenCount = 510        
+    static let maxTokenCount = 510
+    
+    static let bm_TTS = "TTSAudio"
+    static let bm_Phonemize = "Phonemize"
+    static let bm_bert = "BERT"
+    static let bm_duration = "Duration"
+    static let bm_prosody = "Prosody"
+    static let bm_decoder = "Decoder"
   }
 }

@@ -32,7 +32,7 @@ final class ESpeakNGEngine {
       let initOK = espeak_Initialize(AUDIO_OUTPUT_PLAYBACK, 0, bundleURLStr, 0)
 
       if initOK != Constants.successAudioSampleRate {
-        print("Internal espseak-ng error, could not initialize")
+        logPrint("Internal espseak-ng error, could not initialize")
         throw ESpeakNGEngineError.couldNotInitialize
       }
 
@@ -60,12 +60,12 @@ final class ESpeakNGEngine {
 
       try LanguageDialect.allCases.forEach {
         if $0.rawValue.count > 0, !languageList.contains($0.rawValue) {
-          print("Language dialect \($0) not found in espeak-ng voice list")
+          logPrint("Language dialect \($0) not found in espeak-ng voice list")
           throw ESpeakNGEngineError.languageNotFound
         }
       }
     } else {
-      print("Couldn't find the espeak-ng data bundle, cannot initialize")
+      logPrint("Couldn't find the espeak-ng data bundle, cannot initialize")
       throw ESpeakNGEngineError.dataBundleNotFound
     }
   }
@@ -73,7 +73,7 @@ final class ESpeakNGEngine {
   // Destructor
   deinit {
     let terminateOK = espeak_Terminate()
-    print("ESpeakNGEngine termination OK: \(terminateOK == EE_OK)")
+    logPrint("ESpeakNGEngine termination OK: \(terminateOK == EE_OK)")
   }
 
   // Sets the language that will be used for phonemizing

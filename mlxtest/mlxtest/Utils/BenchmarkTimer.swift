@@ -2,6 +2,7 @@
 //  Kokoro-tts-lib
 //
 import Foundation
+import MLX
 
 class BenchmarkTimer {
   private class Timing {
@@ -33,7 +34,7 @@ class BenchmarkTimer {
       guard let _ = finish else { return }
 
       let spaceString = String(repeating: " ", count: spaces)
-      Swift.print(spaceString + id + ": " + deltaInSec + " sec")
+      logPrint(spaceString + id + ": " + deltaInSec + " sec")
       for childTask in childTasks {
         childTask.log(spaces: spaces + 2)
       }
@@ -83,13 +84,15 @@ class BenchmarkTimer {
   
   #if DEBUG
   
-  @inline(__always) static func startTimer(_ id: String, _ parent: String) {
+  @inline(__always) static func startTimer(_ id: String, _ parent: String? = nil) {
     if let timer = BenchmarkTimer.shared.create(id: id, parent: parent) {
       timer.startTimer()
     }
   }
   
-  @inline(__always) static func stopTimer(_ id: String) {
+  @inline(__always) static func stopTimer(_ id: String, _ arrays: [MLXArray] = []) {
+    arrays.forEach { $0.eval() }
+    
     if let timer = BenchmarkTimer.shared.exists(id: id) {
       timer.stop()
     }
@@ -107,12 +110,17 @@ class BenchmarkTimer {
     BenchmarkTimer.shared.reset()
   }
   
+  @inline(__always) static func getTimeInSec(_ id: String) -> Double? {
+    BenchmarkTimer.shared.timers[id]?.deltaTime
+  }
+  
   #else
   
-  @inline(__always) static func startTimer(_ id: String, _ parent: String) {}
-  @inline(__always) static func stopTimer(_ id: String) {}
+  @inline(__always) static func startTimer(_ id: String, _ parent: String? = nil) {}
+  @inline(__always) static func stopTimer(_ id: String, _ arrays: [MLXArray] = []) {}
   @inline(__always) static func print() {}
   @inline(__always) static func reset() {}
-
+  @inline(__always) static func getTimeInSec(_ id: String) -> Double? { 0.0 }
+  
   #endif
 }
