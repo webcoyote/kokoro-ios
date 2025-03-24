@@ -105,41 +105,12 @@ func mlxStft(
   return spec.transposed(1, 0)
 }
 
-class ThreadPool {
-  private let semaphore: DispatchSemaphore
-  private let queue: DispatchQueue
-  private let dispatchGroup: DispatchGroup
-
-  init(maxConcurrentTasks: Int) {
-    semaphore = DispatchSemaphore(value: maxConcurrentTasks)
-    queue = DispatchQueue(label: "com.threadpool.queue", qos: .default, attributes: .concurrent)
-    dispatchGroup = DispatchGroup()
-  }
-
-  func addTask(_ task: @escaping () -> Void) {
-    dispatchGroup.enter() // Register the task with the DispatchGroup
-    queue.async {
-      self.semaphore.wait()
-      task() // Run the task
-      self.semaphore.signal()
-      self.dispatchGroup.leave() // Mark this task as finished
-    }
-  }
-
-  func waitForAllTasks() {
-    dispatchGroup.wait() // Blocks until all tasks are complete
-    print("✅ All tasks are complete")
-  }
-}
-
 func mlxIstft(
   x: MLXArray,
   hopLength: Int? = nil,
   winLength: Int? = nil,
   window: Any = "hann"
 ) -> MLXArray {
-  BenchmarkTimer.shared.create(id: "StartProcessing", parent: "Istft")
-
   let winLen = winLength ?? ((x.shape[1] - 1) * 2)
   let hopLen = hopLength ?? (winLen / 4)
 
@@ -165,20 +136,9 @@ func mlxIstft(
   let windowModLen = 20 / 5
 
   let wSquared = w * w
-  w.eval()
-  wSquared.eval()
-
   let totalWsquared = MLX.concatenated(Array(repeating: wSquared, count: t / winLen))
 
-  xTransposed.eval()
-  BenchmarkTimer.shared.stop(id: "StartProcessing")
-
-  let fft = BenchmarkTimer.shared.create(id: "FFT", parent: "Istft")!
-  let overlap = BenchmarkTimer.shared.create(id: "Overlap", parent: "Istft")!
-
-  fft.startTimer()
   let output = MLXFFT.irfft(xTransposed, axis: 1) * w
-  output.eval()
 
   var outputs: [MLXArray] = []
   var windowSums: [MLXArray] = []
@@ -199,9 +159,6 @@ func mlxIstft(
       MLXArray.zeros([max(0, t - i * hopLen - windowSumArray.shape[0])]),
     ]))
   }
-  fft.stop()
-
-  overlap.startTimer()
 
   var reconstructed = outputs[0]
   let windowSum = windowSums[0]
@@ -209,19 +166,10 @@ func mlxIstft(
     reconstructed += outputs[i]
     windowSum += windowSums[i]
   }
-  reconstructed.eval()
-  windowSum.eval()
-
-  overlap.stop()
-
-  BenchmarkTimer.shared.create(id: "EndProcessing", parent: "Istft")
 
   reconstructed =
     reconstructed[winLen / 2 ..< (reconstructed.shape[0] - winLen / 2)] /
     windowSum[winLen / 2 ..< (reconstructed.shape[0] - winLen / 2)]
-  reconstructed.eval()
-
-  BenchmarkTimer.shared.stop(id: "EndProcessing")
 
   return reconstructed
 }
@@ -281,19 +229,12 @@ class MLXSTFT {
   func inverse(magnitude: MLXArray, phase: MLXArray) -> MLXArray {
     var reconstructed: [MLXArray] = []
 
-    let unwrapTimer = BenchmarkTimer.shared.create(id: "Unwrap", parent: "InverseSTFT")!
-    let fftTimer = BenchmarkTimer.shared.create(id: "Istft", parent: "InverseSTFT")!
-
     for batchIdx in 0 ..< magnitude.shape[0] {
-      unwrapTimer.startTimer()
       let phaseCont = unwrap(p: phase[batchIdx])
 
       // Combine magnitude and phase
       let stft = magnitude[batchIdx] * MLX.exp(MLXArray(real: 0, imaginary: 1) * phaseCont)
-      stft.eval()
-      unwrapTimer.stop()
 
-      fftTimer.startTimer()
       // Inverse STFT
       let audio = mlxIstft(
         x: stft,
@@ -301,8 +242,6 @@ class MLXSTFT {
         winLength: winLength,
         window: window
       )
-      audio.eval()
-      fftTimer.stop()
       reconstructed.append(audio)
     }
 

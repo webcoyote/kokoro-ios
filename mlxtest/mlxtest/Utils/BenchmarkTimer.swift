@@ -4,13 +4,13 @@
 import Foundation
 
 class BenchmarkTimer {
-  class Timing {
+  private class Timing {
     let id: String
 
     private var start: DispatchTime
     private var finish: DispatchTime?
     private var childTasks: [Timing] = []
-    private let parent: Timing?
+    internal let parent: Timing?
     private var delta: UInt64 = 0
 
     init(id: String, parent: Timing?) {
@@ -33,7 +33,7 @@ class BenchmarkTimer {
       guard let _ = finish else { return }
 
       let spaceString = String(repeating: " ", count: spaces)
-      print(spaceString + id + ": " + deltaInSec + " sec")
+      Swift.print(spaceString + id + ": " + deltaInSec + " sec")
       for childTask in childTasks {
         childTask.log(spaces: spaces + 2)
       }
@@ -50,8 +50,8 @@ class BenchmarkTimer {
   private var timers: [String: Timing] = [:]
 
   @discardableResult
-  func create(id: String, parent parentId: String? = nil) -> Timing? {
-    guard timers[id] == nil else { return nil }
+  private func create(id: String, parent parentId: String? = nil) -> Timing? {
+    guard timers[id] == nil else { return timers[id] }
 
     var parentTiming: Timing?
     if let parentId {
@@ -63,17 +63,56 @@ class BenchmarkTimer {
     return timers[id]
   }
 
-  func stop(id: String) {
+  private func stop(id: String) {
     guard let timing = timers[id] else { return }
     timing.stop()
   }
 
-  func printLog(id: String) {
+  private func printLogs(id: String) {
     guard let timing = timers[id] else { return }
     timing.log()
   }
 
-  func reset() {
+  private func reset() {
     timers = [:]
   }
+  
+  private func exists(id: String) -> Timing? {
+    return timers[id]
+  }
+  
+  #if DEBUG
+  
+  @inline(__always) static func startTimer(_ id: String, _ parent: String) {
+    if let timer = BenchmarkTimer.shared.create(id: id, parent: parent) {
+      timer.startTimer()
+    }
+  }
+  
+  @inline(__always) static func stopTimer(_ id: String) {
+    if let timer = BenchmarkTimer.shared.exists(id: id) {
+      timer.stop()
+    }
+  }
+  
+  static func print() {
+    for (key, timing) in BenchmarkTimer.shared.timers {
+      if timing.parent == nil {
+        BenchmarkTimer.shared.printLogs(id: key)
+      }
+    }
+  }
+  
+  static func reset() {
+    BenchmarkTimer.shared.reset()
+  }
+  
+  #else
+  
+  @inline(__always) static func startTimer(_ id: String, _ parent: String) {}
+  @inline(__always) static func stopTimer(_ id: String) {}
+  @inline(__always) static func print() {}
+  @inline(__always) static func reset() {}
+
+  #endif
 }

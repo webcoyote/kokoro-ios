@@ -15,21 +15,15 @@ class MLXTestModel: ObservableObject {
   }
 
   func say(_ text: String) {
-    let mainTimer = BenchmarkTimer.shared.create(id: "TTSGeneration")
     let audioBuffer = try! kokoroTTSEngine.generateAudio(voice: .afHeart, text: text)
-    BenchmarkTimer.shared.stop(id: "TTSGeneration")
-    BenchmarkTimer.shared.printLog(id: "TTSGeneration")
-
-    BenchmarkTimer.shared.reset()
-
     let audio = audioBuffer[0].asArray(Float.self)
 
     let sampleRate = 24000.0
     let audioLength = Double(audio.count) / sampleRate
-    print("Audio length: " + String(format: "%.4f", audioLength))
+    //print("Audio length: " + String(format: "%.4f", audioLength))
 
-    print("\(mainTimer!.deltaTime)")
-    print("Speed: " + String(format: "%.2f", audioLength / mainTimer!.deltaTime))
+    //print("\(mainTimer!.deltaTime)")
+    //print("Speed: " + String(format: "%.2f", audioLength / mainTimer!.deltaTime))
 
     let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)!
     guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(audio.count)) else {

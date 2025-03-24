@@ -86,8 +86,6 @@ public class KokoroTTS {
   }
 
   public func generateAudio(voice: TTSVoice, text: String, speed: Float = 1.0) throws -> MLXArray {
-    BenchmarkTimer.shared.create(id: "Phonemization", parent: "TTSGeneration")
-
     if chosenVoice != voice {
       self.voice = VoiceLoader.loadVoice(voice)
       try eSpeakEngine.setLanguage(for: voice)
@@ -116,9 +114,6 @@ public class KokoroTTS {
     let (bertDur, _) = bert(paddedInputIds, attentionMask: attentionMask)
     let dEn = bertEncoder(bertDur).transposed(0, 2, 1)
 
-    BenchmarkTimer.shared.stop(id: "Phonemization")
-    BenchmarkTimer.shared.create(id: "Duration", parent: "TTSGeneration")
-
     let refS = self.voice[inputIds.count - 1, 0 ... 1, 0...]
     let s = refS[0 ... 1, 128...]
 
@@ -127,7 +122,7 @@ public class KokoroTTS {
     let duration = durationProj(x)
     let durationSigmoid = MLX.sigmoid(duration).sum(axis: -1) / speed
     let predDur = MLX.clip(durationSigmoid.round(), min: 1).asType(.int32)[0]
-
+    
     let indices = MLX.concatenated(
       predDur.enumerated().map { i, n in
         let nSize: Int = n.item()
@@ -144,21 +139,11 @@ public class KokoroTTS {
     let predAlnTrgBatched = predAlnTrg.expandedDimensions(axis: 0)
     let en = d.transposed(0, 2, 1).matmul(predAlnTrgBatched)
 
-    BenchmarkTimer.shared.stop(id: "Duration")
-    BenchmarkTimer.shared.create(id: "Prosody", parent: "TTSGeneration")
-
     let (F0Pred, NPred) = prosodyPredictor.F0NTrain(x: en, s: s)
     let tEn = textEncoder(paddedInputIds, inputLengths: inputLengths, m: textMask)
     let asr = MLX.matmul(tEn, predAlnTrg)
 
-    BenchmarkTimer.shared.stop(id: "Prosody")
-    BenchmarkTimer.shared.create(id: "Decoder", parent: "TTSGeneration")
-
     let audio = decoder(asr: asr, F0Curve: F0Pred, N: NPred, s: refS[0 ... 1, 0 ... 127])[0]
-    audio.eval()
-
-    BenchmarkTimer.shared.stop(id: "Decoder")
-
     return audio
   }
 

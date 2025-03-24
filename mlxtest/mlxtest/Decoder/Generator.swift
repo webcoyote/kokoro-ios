@@ -145,8 +145,6 @@ class Generator {
   }
 
   func callAsFunction(_ x: MLXArray, _ s: MLXArray, _ F0Curve: MLXArray) -> MLXArray {
-    BenchmarkTimer.shared.create(id: "GeneratorStart", parent: "Decoder")
-
     var f0New = F0Curve[.newAxis, 0..., 0...].transposed(0, 2, 1)
     f0New = f0Upsample(f0New)
 
@@ -154,9 +152,10 @@ class Generator {
 
     harSource = MLX.squeezed(harSource.transposed(0, 2, 1), axis: 1)
     let (harSpec, harPhase) = stft.transform(inputData: harSource)
+    
     var har = MLX.concatenated([harSpec, harPhase], axis: 1)
     har = MLX.swappedAxes(har, 2, 1)
-
+        
     var newX = x
     for i in 0 ..< numUpsamples {
       newX = LeakyReLU(negativeSlope: 0.1)(newX)
@@ -172,7 +171,7 @@ class Generator {
         newX = reflectionPad(newX)
       }
       newX = newX + xSource
-
+      
       var xs: MLXArray?
       for j in 0 ..< numKernels {
         if xs == nil {
@@ -184,26 +183,17 @@ class Generator {
       }
       newX = xs! / numKernels
     }
-
+    
     newX = LeakyReLU(negativeSlope: 0.01)(newX)
 
     newX = MLX.swappedAxes(newX, 2, 1)
     newX = convPost(newX, conv: MLX.conv1d)
     newX = MLX.swappedAxes(newX, 2, 1)
-
+    
     let spec = MLX.exp(newX[0..., 0 ..< (postNFFt / 2 + 1), 0...])
     let phase = MLX.sin(newX[0..., (postNFFt / 2 + 1)..., 0...])
 
-    spec.eval()
-    phase.eval()
-
-    BenchmarkTimer.shared.stop(id: "GeneratorStart")
-
-    BenchmarkTimer.shared.create(id: "InverseSTFT", parent: "Decoder")
     let result = stft.inverse(magnitude: spec, phase: phase)
-    result.eval()
-    BenchmarkTimer.shared.stop(id: "InverseSTFT")
-
     return result
   }
 }

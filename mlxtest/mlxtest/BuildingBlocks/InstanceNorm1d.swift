@@ -107,16 +107,7 @@ class _InstanceNorm {
 
   func callAsFunction(_ input: MLXArray) -> MLXArray {
     checkInputDim(input)
-
-    let featureDim = input.ndim - getNoBatchDim()
-    if input.shape[featureDim] != numFeatures {
-      if affine {
-        fatalError("Expected input's size at dim=\(featureDim) to match numFeatures (\(numFeatures)), but got: \(input.shape[featureDim]).")
-      } else {
-        print("Input's size at dim=\(featureDim) does not match numFeatures. You can silence this warning by not passing in numFeatures, which is not used because affine=False")
-      }
-    }
-
+    
     if input.ndim == getNoBatchDim() {
       return handleNoBatchInput(input)
     }
