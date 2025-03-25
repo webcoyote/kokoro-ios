@@ -31,7 +31,8 @@ public class KokoroTTS {
 
   init() {
     let sanitizedWeights = WeightLoader.loadWeights()
-
+    let config = KokoroConfig.loadConfig()
+    
     bert = CustomAlbert(weights: sanitizedWeights, config: AlbertModelArgs())
     bertEncoder = Linear(weight: sanitizedWeights["bert_encoder.weight"]!, bias: sanitizedWeights["bert_encoder.bias"]!)
     durationEncoder = DurationEncoder(weights: sanitizedWeights, dModel: 512, styDim: 128, nlayers: 6)
