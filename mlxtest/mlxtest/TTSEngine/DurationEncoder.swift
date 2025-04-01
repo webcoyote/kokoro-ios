@@ -11,7 +11,7 @@ class DurationEncoder {
 
   //
   init(weights: [String: MLXArray], dModel: Int, styDim: Int, nlayers: Int) {
-    for i in 0 ..< nlayers {
+    for i in 0 ..< nlayers * 2 {
       if i % 2 == 0 {
         lstms.append(
           LSTM(inputSize: dModel + styDim,
