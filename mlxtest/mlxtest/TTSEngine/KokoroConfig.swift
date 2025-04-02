@@ -4,6 +4,8 @@
 import Foundation
 
 struct KokoroConfig : Decodable {
+  static var config: KokoroConfig?
+
   struct IstftnetConfig : Decodable {
     let upsampleKernelSizes: [Int]
     let upsampleRates: [Int]
@@ -77,6 +79,7 @@ struct KokoroConfig : Decodable {
   static func loadConfig() -> KokoroConfig {
     let filePath = Bundle.main.path(forResource: "config", ofType: "json")!
     let configJSON = try! String.init(contentsOf: URL(filePath: filePath), encoding: .utf8)    
-    return try! JSONDecoder().decode(KokoroConfig.self, from: configJSON.data(using: .utf8)!)
+    KokoroConfig.config = try! JSONDecoder().decode(KokoroConfig.self, from: configJSON.data(using: .utf8)!)
+    return KokoroConfig.config!
   }
 }
