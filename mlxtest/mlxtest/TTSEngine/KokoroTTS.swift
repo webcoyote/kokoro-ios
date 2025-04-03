@@ -171,6 +171,7 @@ public class KokoroTTS {
 
   struct Constants {
     static let maxTokenCount = 510
+    static let samplingRate = 24000
     
     static let bm_TTS = "TTSAudio"
     static let bm_Phonemize = "Phonemize"

@@ -63,8 +63,6 @@ class SineGen {
   }
 
   func callAsFunction(_ f0: MLXArray) -> (MLXArray, MLXArray, MLXArray) {
-    // let f0Buf = MLX.zeros([f0.shape[0], f0.shape[1], dim])
-
     // Fundamental component
     let range = MLXArray(1 ... harmonicNum + 1).asType(.float32)
     let fn = f0 * range.reshaped([1, 1, range.shape[0]])

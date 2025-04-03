@@ -5,11 +5,9 @@ import Foundation
 import MLX
 import MLXNN
 
-//
 class DurationEncoder {
   var lstms: [Module] = []
 
-  //
   init(weights: [String: MLXArray], dModel: Int, styDim: Int, nlayers: Int) {
     for i in 0 ..< nlayers * 2 {
       if i % 2 == 0 {
@@ -32,7 +30,6 @@ class DurationEncoder {
     }
   }
 
-  //
   func callAsFunction(_ x: MLXArray, style: MLXArray, textLengths _: MLXArray, m: MLXArray) -> MLXArray {
     var x = x.transposed(2, 0, 1)
     let s = MLX.broadcast(style, to: [x.shape[0], x.shape[1], style.shape[style.shape.count - 1]])

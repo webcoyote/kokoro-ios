@@ -37,7 +37,7 @@ class Generator {
 
     mSource = SourceModuleHnNSF(
       weights: weights,
-      samplingRate: 24000,
+      samplingRate: KokoroTTS.Constants.samplingRate,
       upsampleScale: upsampleScaleNum.item(),
       harmonicNum: 8,
       voicedThreshold: 10
