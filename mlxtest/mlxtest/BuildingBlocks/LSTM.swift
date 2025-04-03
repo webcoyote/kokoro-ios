@@ -164,7 +164,8 @@ class LSTM: Module {
   ) -> (MLXArray, ((MLXArray, MLXArray), (MLXArray, MLXArray))) {
     let input: MLXArray
     if x.ndim == 2 {
-      input = x.expandedDimensions(axis: 0) // (1, seq_len, input_size)
+      // (1, seq_len, input_size)
+      input = x.expandedDimensions(axis: 0)
     } else {
       input = x
     }

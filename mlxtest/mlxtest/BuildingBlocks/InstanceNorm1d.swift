@@ -69,7 +69,7 @@ class _InstanceNorm {
       mean = MLX.mean(input, axes: reduceDims, keepDims: true)
       variance = MLX.variance(input, axes: reduceDims, keepDims: true)
 
-      if trackRunningStats && training, let runningMean = runningMean, let runningVar = runningVar {
+      if trackRunningStats && training, let runningMean, let runningVar {
         let overallMean = MLX.mean(mean, axes: [0])
         let overallVar = MLX.mean(variance, axes: [0])
 

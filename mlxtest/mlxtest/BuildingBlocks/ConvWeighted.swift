@@ -56,7 +56,8 @@ func weightNorm(
 
   let normV = computeNorm(x: weightV, p: 2, dim: axes, keepdim: true)
 
-  let normalizedWeight = weightV / (normV + 1e-7) // Add epsilon for numerical stability
+  // Add epsilon for numerical stability
+  let normalizedWeight = weightV / (normV + 1e-7)
   return normalizedWeight * weightG
 }
 
@@ -85,7 +86,6 @@ class ConvWeighted: Module {
     self.dilation = dilation
     self.groups = groups
 
-    // Store parameters
     self.weightG = weightG
     self.weightV = weightV
     self.bias = bias
