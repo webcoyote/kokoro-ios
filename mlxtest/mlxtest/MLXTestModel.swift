@@ -18,8 +18,8 @@ class MLXTestModel: ObservableObject {
     let audioBuffer = try! kokoroTTSEngine.generateAudio(voice: .afHeart, text: text)
     let audio = audioBuffer[0].asArray(Float.self)
 
-    let sampleRate = 24000.0
-    let audioLength = Double(audio.count) / sampleRate    
+    let sampleRate = Double(KokoroTTS.Constants.samplingRate)
+    let audioLength = Double(audio.count) / sampleRate
     logPrint("Audio Length: " + String(format: "%.4f", audioLength))
     logPrint("Real Time Factor: " + String(format: "%.2f", audioLength / (BenchmarkTimer.getTimeInSec(KokoroTTS.Constants.bm_TTS) ?? 1.0)))
 

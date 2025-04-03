@@ -31,14 +31,21 @@ public class KokoroTTS {
 
   init() {
     let sanitizedWeights = WeightLoader.loadWeights()
-
-    bert = CustomAlbert(weights: sanitizedWeights, config: AlbertModelArgs())
+    let config = KokoroConfig.loadConfig()
+    
+    bert = CustomAlbert(weights: sanitizedWeights,
+                        config: AlbertModelArgs(
+                          numHiddenLayers: config.plbert.numHiddenLayers,
+                          numAttentionHeads: config.plbert.numAttentionHeads,
+                          hiddenSize: config.plbert.hiddenSize,
+                          intermediateSize: config.plbert.intermediateSize,
+                          vocabSize: config.nToken))
     bertEncoder = Linear(weight: sanitizedWeights["bert_encoder.weight"]!, bias: sanitizedWeights["bert_encoder.bias"]!)
-    durationEncoder = DurationEncoder(weights: sanitizedWeights, dModel: 512, styDim: 128, nlayers: 6)
+    durationEncoder = DurationEncoder(weights: sanitizedWeights, dModel: config.hiddenDim, styDim: config.styleDim, nlayers: config.nLayer)
 
     predictorLSTM = LSTM(
-      inputSize: 512 + 128,
-      hiddenSize: 512 / 2,
+      inputSize: config.hiddenDim + config.styleDim,
+      hiddenSize: config.hiddenDim / 2,
       wxForward: sanitizedWeights["predictor.lstm.weight_ih_l0"]!,
       whForward: sanitizedWeights["predictor.lstm.weight_hh_l0"]!,
       biasIhForward: sanitizedWeights["predictor.lstm.bias_ih_l0"]!,
@@ -56,30 +63,30 @@ public class KokoroTTS {
 
     prosodyPredictor = ProsodyPredictor(
       weights: sanitizedWeights,
-      styleDim: 128,
-      dHid: 512
+      styleDim: config.styleDim,
+      dHid: config.hiddenDim
     )
 
     textEncoder = TextEncoder(
       weights: sanitizedWeights,
-      channels: 512,
-      kernelSize: 5,
-      depth: 3,
-      nSymbols: 178
+      channels: config.hiddenDim,
+      kernelSize: config.textEncoderKernelSize,
+      depth: config.nLayer,
+      nSymbols: config.nToken
     )
 
     decoder = Decoder(
       weights: sanitizedWeights,
-      dimIn: 512,
-      styleDim: 128,
-      dimOut: 80,
-      resblockKernelSizes: [3, 7, 11],
-      upsampleRates: [10, 6],
-      upsampleInitialChannel: 512,
-      resblockDilationSizes: [[1, 3, 5], [1, 3, 5], [1, 3, 5]],
-      upsampleKernelSizes: [20, 12],
-      genIstftNFft: 20,
-      genIstftHopSize: 5
+      dimIn: config.hiddenDim,
+      styleDim: config.styleDim,
+      dimOut: config.nMels,
+      resblockKernelSizes: config.istftNet.resblockKernelSizes,
+      upsampleRates: config.istftNet.upsampleRates,
+      upsampleInitialChannel: config.istftNet.upsampleInitialChannel,
+      resblockDilationSizes: config.istftNet.resblockDilationSizes,
+      upsampleKernelSizes: config.istftNet.upsampleKernelSizes,
+      genIstftNFft: config.istftNet.genIstftNFFT,
+      genIstftHopSize: config.istftNet.genIstftHopSize
     )
 
     eSpeakEngine = try! ESpeakNGEngine()
@@ -164,6 +171,7 @@ public class KokoroTTS {
 
   struct Constants {
     static let maxTokenCount = 510
+    static let samplingRate = 24000
     
     static let bm_TTS = "TTSAudio"
     static let bm_Phonemize = "Phonemize"
