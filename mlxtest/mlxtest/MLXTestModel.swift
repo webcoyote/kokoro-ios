@@ -12,6 +12,17 @@ class MLXTestModel: ObservableObject {
     audioEngine = AVAudioEngine()
     playerNode = AVAudioPlayerNode()
     audioEngine.attach(playerNode)
+
+    #if os(iOS)
+      do {
+        let audioSession = AVAudioSession.sharedInstance()
+        try audioSession.setCategory(.playback, mode: .default)
+        try audioSession.setActive(true)
+      } catch {
+        logPrint("Failed to set up AVAudioSession: \(error.localizedDescription)")
+        // Handle the error appropriately
+      }
+    #endif
   }
 
   func say(_ text: String) {
