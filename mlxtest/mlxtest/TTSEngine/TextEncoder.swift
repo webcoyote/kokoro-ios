@@ -77,7 +77,7 @@ class TextEncoder {
     x = MLX.swappedAxes(lstmOutput, 2, 1)
 
     let xPad = MLX.zeros([x.shape[0], x.shape[1], mask.shape[mask.shape.count - 1]])
-    xPad.update(x)
+    xPad._updateInternal(x)
 
     return MLX.where(mask, 0.0, xPad)
   }
