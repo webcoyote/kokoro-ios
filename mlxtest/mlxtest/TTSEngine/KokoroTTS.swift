@@ -5,6 +5,7 @@ import Foundation
 import MLX
 import MLXNN
 import eSpeakNGLib
+import MisakiSwift
 
 // Available voices
 public enum TTSVoice {
@@ -29,6 +30,7 @@ public class KokoroTTS {
   private let eSpeakEngine: eSpeakNG!
   private var chosenVoice: TTSVoice?
   private var voice: MLXArray!
+  private var misaki: EnglishG2P!
 
   init() {
     let sanitizedWeights = WeightLoader.loadWeights()
@@ -97,13 +99,15 @@ public class KokoroTTS {
     if chosenVoice != voice {
       self.voice = VoiceLoader.loadVoice(voice)
       try eSpeakEngine.setLanguage(language: language)
+      misaki = EnglishG2P(british: language == .enGB)
       chosenVoice = voice
     }
 
     BenchmarkTimer.reset()
     BenchmarkTimer.startTimer(Constants.bm_TTS)
     BenchmarkTimer.startTimer(Constants.bm_Phonemize, Constants.bm_TTS)
-    let outputStr = try! eSpeakEngine.phonemize(text: text)
+    // let outputStr = try! eSpeakEngine.phonemize(text: text)
+    let (outputStr, _) = misaki.phonemize(text: text)
 
     let inputIds = Tokenizer.tokenize(phonemizedText: outputStr)
     guard inputIds.count <= Constants.maxTokenCount else {

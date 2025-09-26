@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		529C10802E86AC8C00449FAE /* eSpeakNGLib in Frameworks */ = {isa = PBXBuildFile; productRef = 529C107F2E86AC8C00449FAE /* eSpeakNGLib */; };
 		529C10812E86ACAE00449FAE /* eSpeakNGLib in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 529C107F2E86AC8C00449FAE /* eSpeakNGLib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		529C10852E86AF4300449FAE /* MisakiSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 529C10842E86AF4300449FAE /* MisakiSwift */; };
 		8D0998392D8712C3002ADCA9 /* MLX in Frameworks */ = {isa = PBXBuildFile; productRef = 8D0998382D8712C3002ADCA9 /* MLX */; };
 		8D09983B2D8712C3002ADCA9 /* MLXFFT in Frameworks */ = {isa = PBXBuildFile; productRef = 8D09983A2D8712C3002ADCA9 /* MLXFFT */; };
 		8D09983D2D8712C3002ADCA9 /* MLXFast in Frameworks */ = {isa = PBXBuildFile; productRef = 8D09983C2D8712C3002ADCA9 /* MLXFast */; };
@@ -50,6 +51,7 @@
 			files = (
 				8D09983D2D8712C3002ADCA9 /* MLXFast in Frameworks */,
 				8D09983F2D8712C3002ADCA9 /* MLXLinalg in Frameworks */,
+				529C10852E86AF4300449FAE /* MisakiSwift in Frameworks */,
 				8D0998392D8712C3002ADCA9 /* MLX in Frameworks */,
 				8D0998412D8712C3002ADCA9 /* MLXNN in Frameworks */,
 				529C10802E86AC8C00449FAE /* eSpeakNGLib in Frameworks */,
@@ -112,6 +114,7 @@
 				8D09983E2D8712C3002ADCA9 /* MLXLinalg */,
 				8D0998402D8712C3002ADCA9 /* MLXNN */,
 				529C107F2E86AC8C00449FAE /* eSpeakNGLib */,
+				529C10842E86AF4300449FAE /* MisakiSwift */,
 			);
 			productName = mlxtest;
 			productReference = 8D0998262D87122F002ADCA9 /* mlxtest.app */;
@@ -144,6 +147,7 @@
 			packageReferences = (
 				8D0998372D8712C3002ADCA9 /* XCRemoteSwiftPackageReference "mlx-swift" */,
 				529C107E2E86AC8C00449FAE /* XCRemoteSwiftPackageReference "eSpeakNGSwift" */,
+				529C10832E86AF4300449FAE /* XCRemoteSwiftPackageReference "MisakiSwift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8D0998272D87122F002ADCA9 /* Products */;
@@ -403,6 +407,14 @@
 				version = 1.0.1;
 			};
 		};
+		529C10832E86AF4300449FAE /* XCRemoteSwiftPackageReference "MisakiSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mlalma/MisakiSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		8D0998372D8712C3002ADCA9 /* XCRemoteSwiftPackageReference "mlx-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ml-explore/mlx-swift";
@@ -418,6 +430,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 529C107E2E86AC8C00449FAE /* XCRemoteSwiftPackageReference "eSpeakNGSwift" */;
 			productName = eSpeakNGLib;
+		};
+		529C10842E86AF4300449FAE /* MisakiSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 529C10832E86AF4300449FAE /* XCRemoteSwiftPackageReference "MisakiSwift" */;
+			productName = MisakiSwift;
 		};
 		8D0998382D8712C3002ADCA9 /* MLX */ = {
 			isa = XCSwiftPackageProductDependency;
