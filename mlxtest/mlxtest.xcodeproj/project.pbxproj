@@ -7,23 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		529C10802E86AC8C00449FAE /* eSpeakNGLib in Frameworks */ = {isa = PBXBuildFile; productRef = 529C107F2E86AC8C00449FAE /* eSpeakNGLib */; };
+		529C10812E86ACAE00449FAE /* eSpeakNGLib in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 529C107F2E86AC8C00449FAE /* eSpeakNGLib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		8D0998392D8712C3002ADCA9 /* MLX in Frameworks */ = {isa = PBXBuildFile; productRef = 8D0998382D8712C3002ADCA9 /* MLX */; };
 		8D09983B2D8712C3002ADCA9 /* MLXFFT in Frameworks */ = {isa = PBXBuildFile; productRef = 8D09983A2D8712C3002ADCA9 /* MLXFFT */; };
 		8D09983D2D8712C3002ADCA9 /* MLXFast in Frameworks */ = {isa = PBXBuildFile; productRef = 8D09983C2D8712C3002ADCA9 /* MLXFast */; };
 		8D09983F2D8712C3002ADCA9 /* MLXLinalg in Frameworks */ = {isa = PBXBuildFile; productRef = 8D09983E2D8712C3002ADCA9 /* MLXLinalg */; };
 		8D0998412D8712C3002ADCA9 /* MLXNN in Frameworks */ = {isa = PBXBuildFile; productRef = 8D0998402D8712C3002ADCA9 /* MLXNN */; };
-		8D099A482D871AE7002ADCA9 /* ESpeakNG.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D099A472D871AE7002ADCA9 /* ESpeakNG.xcframework */; };
-		8D099A492D871AE7002ADCA9 /* ESpeakNG.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8D099A472D871AE7002ADCA9 /* ESpeakNG.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		8D099A4A2D871AE7002ADCA9 /* Embed Frameworks */ = {
+		529C10822E86ACAE00449FAE /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8D099A492D871AE7002ADCA9 /* ESpeakNG.xcframework in Embed Frameworks */,
+				529C10812E86ACAE00449FAE /* eSpeakNGLib in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -51,8 +51,8 @@
 				8D09983D2D8712C3002ADCA9 /* MLXFast in Frameworks */,
 				8D09983F2D8712C3002ADCA9 /* MLXLinalg in Frameworks */,
 				8D0998392D8712C3002ADCA9 /* MLX in Frameworks */,
-				8D099A482D871AE7002ADCA9 /* ESpeakNG.xcframework in Frameworks */,
 				8D0998412D8712C3002ADCA9 /* MLXNN in Frameworks */,
+				529C10802E86AC8C00449FAE /* eSpeakNGLib in Frameworks */,
 				8D09983B2D8712C3002ADCA9 /* MLXFFT in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -95,7 +95,7 @@
 				8D0998222D87122F002ADCA9 /* Sources */,
 				8D0998232D87122F002ADCA9 /* Frameworks */,
 				8D0998242D87122F002ADCA9 /* Resources */,
-				8D099A4A2D871AE7002ADCA9 /* Embed Frameworks */,
+				529C10822E86ACAE00449FAE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -111,6 +111,7 @@
 				8D09983C2D8712C3002ADCA9 /* MLXFast */,
 				8D09983E2D8712C3002ADCA9 /* MLXLinalg */,
 				8D0998402D8712C3002ADCA9 /* MLXNN */,
+				529C107F2E86AC8C00449FAE /* eSpeakNGLib */,
 			);
 			productName = mlxtest;
 			productReference = 8D0998262D87122F002ADCA9 /* mlxtest.app */;
@@ -142,6 +143,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				8D0998372D8712C3002ADCA9 /* XCRemoteSwiftPackageReference "mlx-swift" */,
+				529C107E2E86AC8C00449FAE /* XCRemoteSwiftPackageReference "eSpeakNGSwift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8D0998272D87122F002ADCA9 /* Products */;
@@ -316,6 +318,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kokoro.mlxtest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -353,6 +356,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kokoro.mlxtest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -391,17 +395,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		529C107E2E86AC8C00449FAE /* XCRemoteSwiftPackageReference "eSpeakNGSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mlalma/eSpeakNGSwift";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.1;
+			};
+		};
 		8D0998372D8712C3002ADCA9 /* XCRemoteSwiftPackageReference "mlx-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ml-explore/mlx-swift";
 			requirement = {
 				kind = exactVersion;
-				version = 0.25.4;
+				version = 0.25.6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		529C107F2E86AC8C00449FAE /* eSpeakNGLib */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 529C107E2E86AC8C00449FAE /* XCRemoteSwiftPackageReference "eSpeakNGSwift" */;
+			productName = eSpeakNGLib;
+		};
 		8D0998382D8712C3002ADCA9 /* MLX */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8D0998372D8712C3002ADCA9 /* XCRemoteSwiftPackageReference "mlx-swift" */;

@@ -4,6 +4,7 @@
 import Foundation
 import MLX
 import MLXNN
+import eSpeakNGLib
 
 // Available voices
 public enum TTSVoice {
@@ -25,7 +26,7 @@ public class KokoroTTS {
   private let prosodyPredictor: ProsodyPredictor!
   private let textEncoder: TextEncoder!
   private let decoder: Decoder!
-  private let eSpeakEngine: ESpeakNGEngine!
+  private let eSpeakEngine: eSpeakNG!
   private var chosenVoice: TTSVoice?
   private var voice: MLXArray!
 
@@ -89,13 +90,13 @@ public class KokoroTTS {
       genIstftHopSize: config.istftNet.genIstftHopSize
     )
 
-    eSpeakEngine = try! ESpeakNGEngine()
+    eSpeakEngine = try! eSpeakNG()
   }
 
-  public func generateAudio(voice: TTSVoice, text: String, speed: Float = 1.0) throws -> MLXArray {
+  public func generateAudio(voice: TTSVoice, language: eSpeakNG.Language, text: String, speed: Float = 1.0) throws -> MLXArray {
     if chosenVoice != voice {
       self.voice = VoiceLoader.loadVoice(voice)
-      try eSpeakEngine.setLanguage(for: voice)
+      try eSpeakEngine.setLanguage(language: language)
       chosenVoice = voice
     }
 

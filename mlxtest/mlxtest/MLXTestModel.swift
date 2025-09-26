@@ -26,7 +26,7 @@ class MLXTestModel: ObservableObject {
   }
 
   func say(_ text: String) {
-    let audioBuffer = try! kokoroTTSEngine.generateAudio(voice: .afHeart, text: text)
+    let audioBuffer = try! kokoroTTSEngine.generateAudio(voice: .afHeart, language: .enUS, text: text)
     let audio = audioBuffer[0].asArray(Float.self)
 
     let sampleRate = Double(KokoroTTS.Constants.samplingRate)
