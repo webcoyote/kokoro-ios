@@ -7,7 +7,7 @@ import Foundation
 final class Tokenizer {
   private init() {}
 
-  // Use ESpeakNGEngine to phonemize the text first before calling this method
+  // Phonemize the text first before calling this method
   // Returns tokenized array that can then be passed to TTS system
   static func tokenize(phonemizedText text: String) -> [Int] {
     guard let vocab = KokoroConfig.config?.vocab else { return [] }

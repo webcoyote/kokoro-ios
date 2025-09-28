@@ -27,10 +27,9 @@ public class KokoroTTS {
   private let prosodyPredictor: ProsodyPredictor!
   private let textEncoder: TextEncoder!
   private let decoder: Decoder!
-  private let eSpeakEngine: eSpeakNG!
+  private let g2pProcessor: G2PProcessor?
   private var chosenVoice: TTSVoice?
   private var voice: MLXArray!
-  private var misaki: EnglishG2P!
 
   init() {
     let sanitizedWeights = WeightLoader.loadWeights()
@@ -92,22 +91,27 @@ public class KokoroTTS {
       genIstftHopSize: config.istftNet.genIstftHopSize
     )
 
-    eSpeakEngine = try! eSpeakNG()
+    g2pProcessor = try? G2PFactory.createG2PEngine(engine: .misaki)
   }
 
-  public func generateAudio(voice: TTSVoice, language: eSpeakNG.Language, text: String, speed: Float = 1.0) throws -> MLXArray {
+  public func generateAudio(voice: TTSVoice, language: Language, text: String, speed: Float = 1.0) throws -> MLXArray {
     if chosenVoice != voice {
       self.voice = VoiceLoader.loadVoice(voice)
-      try eSpeakEngine.setLanguage(language: language)
-      misaki = EnglishG2P(british: language == .enGB)
+      guard let g2pProcessor else {
+        throw G2PProcessorError.processorNotInitialized
+      }
+      
+      try g2pProcessor.setLanguage(language)      
       chosenVoice = voice
     }
 
     BenchmarkTimer.reset()
     BenchmarkTimer.startTimer(Constants.bm_TTS)
     BenchmarkTimer.startTimer(Constants.bm_Phonemize, Constants.bm_TTS)
-    // let outputStr = try! eSpeakEngine.phonemize(text: text)
-    let (outputStr, _) = misaki.phonemize(text: text)
+
+    guard let outputStr = try g2pProcessor?.process(input: text) else {
+      throw G2PProcessorError.processorNotInitialized
+    }
 
     let inputIds = Tokenizer.tokenize(phonemizedText: outputStr)
     guard inputIds.count <= Constants.maxTokenCount else {
