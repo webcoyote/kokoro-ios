@@ -4,8 +4,6 @@
 import Foundation
 import MLX
 import MLXNN
-import eSpeakNGLib
-import MisakiSwift
 
 // Available voices
 public enum TTSVoice {
@@ -94,7 +92,7 @@ public class KokoroTTS {
     g2pProcessor = try? G2PFactory.createG2PEngine(engine: .misaki)
   }
 
-  public func generateAudio(voice: TTSVoice, language: Language, text: String, speed: Float = 1.0) throws -> MLXArray {
+  public func generateAudio(voice: TTSVoice, language: Language, text: String, speed: Float = 1.0) throws -> [Float] {
     if chosenVoice != voice {
       self.voice = VoiceLoader.loadVoice(voice)
       guard let g2pProcessor else {
@@ -107,7 +105,6 @@ public class KokoroTTS {
 
     BenchmarkTimer.reset()
     BenchmarkTimer.startTimer(Constants.bm_TTS)
-    BenchmarkTimer.startTimer(Constants.bm_Phonemize, Constants.bm_TTS)
 
     guard let outputStr = try g2pProcessor?.process(input: text) else {
       throw G2PProcessorError.processorNotInitialized
@@ -129,14 +126,10 @@ public class KokoroTTS {
     let swiftTextMask: [Bool] = textMask.asArray(Bool.self)
     let swiftTextMaskInt = swiftTextMask.map { !$0 ? 1 : 0 }
     let attentionMask = MLXArray(swiftTextMaskInt).reshaped(textMask.shape)
-    BenchmarkTimer.stopTimer(Constants.bm_Phonemize, [attentionMask, paddedInputIds])
 
-    BenchmarkTimer.startTimer(Constants.bm_bert, Constants.bm_TTS)
     let (bertDur, _) = bert(paddedInputIds, attentionMask: attentionMask)
     let dEn = bertEncoder(bertDur).transposed(0, 2, 1)
-    BenchmarkTimer.stopTimer(Constants.bm_bert, [dEn])
 
-    BenchmarkTimer.startTimer(Constants.bm_duration, Constants.bm_TTS)
     let refS = self.voice[inputIds.count - 1, 0 ... 1, 0...]
     let s = refS[0 ... 1, 128...]
     let d = durationEncoder(dEn, style: s, textLengths: inputLengths, m: textMask)
@@ -160,22 +153,15 @@ public class KokoroTTS {
     let predAlnTrg = MLXArray(swiftPredAlnTrg).reshaped([paddedInputIds.shape[1], indices.shape[0]])
     let predAlnTrgBatched = predAlnTrg.expandedDimensions(axis: 0)
     let en = d.transposed(0, 2, 1).matmul(predAlnTrgBatched)
-    BenchmarkTimer.stopTimer(Constants.bm_duration, [en, s])
 
-    BenchmarkTimer.startTimer(Constants.bm_prosody, Constants.bm_TTS)
     let (F0Pred, NPred) = prosodyPredictor.F0NTrain(x: en, s: s)
     let tEn = textEncoder(paddedInputIds, inputLengths: inputLengths, m: textMask)
     let asr = MLX.matmul(tEn, predAlnTrg)
-    BenchmarkTimer.stopTimer(Constants.bm_prosody, [asr, F0Pred, NPred])
-
-    BenchmarkTimer.startTimer(Constants.bm_decoder, Constants.bm_TTS)
     let audio = decoder(asr: asr, F0Curve: F0Pred, N: NPred, s: refS[0 ... 1, 0 ... 127])[0]
-    BenchmarkTimer.stopTimer(Constants.bm_decoder, [audio])
     
     BenchmarkTimer.stopTimer(Constants.bm_TTS)
-    BenchmarkTimer.print()
-    
-    return audio
+
+    return audio[0].asArray(Float.self)    
   }
 
   struct Constants {

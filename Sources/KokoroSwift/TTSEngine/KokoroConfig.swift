@@ -4,7 +4,7 @@
 import Foundation
 
 struct KokoroConfig : Decodable {
-  static var config: KokoroConfig?
+  nonisolated(unsafe) static var config: KokoroConfig?
 
   struct IstftnetConfig : Decodable {
     let upsampleKernelSizes: [Int]
@@ -76,7 +76,7 @@ struct KokoroConfig : Decodable {
     case vocab = "vocab"
   }
   
-  static func loadConfig() -> KokoroConfig {
+  nonisolated static func loadConfig() -> KokoroConfig {
     let filePath = Bundle.main.path(forResource: "config", ofType: "json")!
     let configJSON = try! String.init(contentsOf: URL(filePath: filePath), encoding: .utf8)    
     KokoroConfig.config = try! JSONDecoder().decode(KokoroConfig.self, from: configJSON.data(using: .utf8)!)

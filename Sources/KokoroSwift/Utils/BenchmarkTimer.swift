@@ -44,7 +44,7 @@ class BenchmarkTimer {
     var deltaInSec: String { String(format: "%.4f", Double(delta) / 1_000_000_000) }
   }
 
-  static let shared = BenchmarkTimer()
+  nonisolated(unsafe) static let shared = BenchmarkTimer()
 
   private init() {}
 

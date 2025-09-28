@@ -52,7 +52,7 @@ class VoiceLoader {
   }
 
   private enum Constants {
-    static let voiceFiles: [TTSVoice: (String, String)] = [
+    nonisolated(unsafe) static let voiceFiles: [TTSVoice: (String, String)] = [
       .afHeart: ("af_heart", "json"),
       .bmGeorge: ("bm_george", "json")
     ]
