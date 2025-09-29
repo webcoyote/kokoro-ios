@@ -11,14 +11,14 @@ class VoiceLoader {
 
   static func loadVoice(_ voice: TTSVoice) -> MLXArray {
     let (file, ext) = Constants.voiceFiles[voice]!
-    let filePath = Bundle.main.path(forResource: file, ofType: ext)!
-    return try! read3DArrayFromJson(file: filePath, shape: [510, 1, 256])!
+    let fileURL = Bundle.module.url(forResource: file, withExtension: ext, subdirectory: "Resources")!
+    return try! read3DArrayFromJson(file: fileURL, shape: [510, 1, 256])!
   }
 
-  private static func read3DArrayFromJson(file: String, shape: [Int]) throws -> MLXArray? {
+  private static func read3DArrayFromJson(file: URL, shape: [Int]) throws -> MLXArray? {
     guard shape.count == 3 else { return nil }
 
-    let data = try Data(contentsOf: URL(fileURLWithPath: file))
+    let data = try Data(contentsOf: file)
     let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
 
     var aa = Array(repeating: Float(0.0), count: shape[0] * shape[1] * shape[2])
