@@ -29,8 +29,8 @@ public class KokoroTTS {
   private var chosenVoice: TTSVoice?
   private var voice: MLXArray!
 
-  public init(g2p: G2P = .misaki) {
-    let sanitizedWeights = WeightLoader.loadWeights()
+  public init(modelPath: URL, g2p: G2P = .misaki) {
+    let sanitizedWeights = WeightLoader.loadWeights(modelPath: modelPath)
     let config = KokoroConfig.loadConfig()
     
     bert = CustomAlbert(weights: sanitizedWeights,
