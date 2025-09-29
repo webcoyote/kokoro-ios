@@ -77,8 +77,8 @@ struct KokoroConfig : Decodable {
   }
   
   nonisolated static func loadConfig() -> KokoroConfig {
-    let filePath = Bundle.main.path(forResource: "config", ofType: "json")!
-    let configJSON = try! String.init(contentsOf: URL(filePath: filePath), encoding: .utf8)    
+    let fileURL = Bundle.module.url(forResource: "config", withExtension: "json", subdirectory: "Resources")!
+    let configJSON = try! String.init(contentsOf: fileURL, encoding: .utf8)
     KokoroConfig.config = try! JSONDecoder().decode(KokoroConfig.self, from: configJSON.data(using: .utf8)!)
     return KokoroConfig.config!
   }
