@@ -1,14 +1,14 @@
+public enum G2P {
+  case misaki
+  case eSpeakNG
+}
+
 class G2PFactory {
-  enum G2P {
-    case misaki
-    case eSpeakNG
-  }
-  
   enum G2PError: Error {
     case noSuchEngine
   }
   
-  static func createG2PEngine(engine: G2P) throws -> G2PProcessor {
+  static func createG2PProcessor(engine: G2P) throws -> G2PProcessor {
     switch engine {
     
     case .misaki:

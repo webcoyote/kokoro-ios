@@ -13,7 +13,7 @@ public enum TTSVoice {
 
 // Main class, encapsulates the whole Kokoro text-to-speech pipeline
 public class KokoroTTS {
-  enum KokoroTTSError: Error {
+  public enum KokoroTTSError: Error {
     case tooManyTokens
   }
 
@@ -29,7 +29,7 @@ public class KokoroTTS {
   private var chosenVoice: TTSVoice?
   private var voice: MLXArray!
 
-  init() {
+  public init(g2p: G2P = .misaki) {
     let sanitizedWeights = WeightLoader.loadWeights()
     let config = KokoroConfig.loadConfig()
     
@@ -89,7 +89,7 @@ public class KokoroTTS {
       genIstftHopSize: config.istftNet.genIstftHopSize
     )
 
-    g2pProcessor = try? G2PFactory.createG2PEngine(engine: .misaki)
+    g2pProcessor = try? G2PFactory.createG2PProcessor(engine: g2p)
   }
 
   public func generateAudio(voice: TTSVoice, language: Language, text: String, speed: Float = 1.0) throws -> [Float] {
@@ -99,7 +99,7 @@ public class KokoroTTS {
         throw G2PProcessorError.processorNotInitialized
       }
       
-      try g2pProcessor.setLanguage(language)      
+      try g2pProcessor.setLanguage(language)
       chosenVoice = voice
     }
 
@@ -161,14 +161,14 @@ public class KokoroTTS {
     
     BenchmarkTimer.stopTimer(Constants.bm_TTS)
 
-    return audio[0].asArray(Float.self)    
+    return audio[0].asArray(Float.self)
   }
 
-  struct Constants {
-    static let maxTokenCount = 510
-    static let samplingRate = 24000
+  public struct Constants {
+    public static let maxTokenCount = 510
+    public static let samplingRate = 24000
     
-    static let bm_TTS = "TTSAudio"
+    public static let bm_TTS = "TTSAudio"
     static let bm_Phonemize = "Phonemize"
     static let bm_bert = "BERT"
     static let bm_duration = "Duration"

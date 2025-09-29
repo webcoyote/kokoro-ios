@@ -1,6 +1,15 @@
 {
-  "originHash" : "890f98ecd0f12548af7a25bb4881d86a5c5248146891b540e5506d1a9a13b348",
+  "originHash" : "7759a2de878208ef2ed3776f4ce9df9a35511fcbe429e7daadc31db5736c93b4",
   "pins" : [
+    {
+      "identity" : "misakiswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mlalma/MisakiSwift",
+      "state" : {
+        "revision" : "cddad14f2a457d8ee4a2a7ae940851a7ce4aa4ca",
+        "version" : "1.0.1"
+      }
+    },
     {
       "identity" : "mlx-swift",
       "kind" : "remoteSourceControl",

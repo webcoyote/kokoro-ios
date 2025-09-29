@@ -16,7 +16,9 @@ let package = Package(
     ),
   ],
   dependencies: [
-    .package(url: "https://github.com/ml-explore/mlx-swift", from: "0.25.6")
+    .package(url: "https://github.com/ml-explore/mlx-swift", from: "0.25.6"),
+    // .package(url: "https://github.com/mlalma/eSpeakNGSwift", from: "1.0.1"),
+    .package(url: "https://github.com/mlalma/MisakiSwift", from: "1.0.1")
   ],
   targets: [
     .target(
@@ -25,7 +27,9 @@ let package = Package(
         .product(name: "MLX", package: "mlx-swift"),
         .product(name: "MLXNN", package: "mlx-swift"),
         .product(name: "MLXRandom", package: "mlx-swift"),
-        .product(name: "MLXFFT", package: "mlx-swift")
+        .product(name: "MLXFFT", package: "mlx-swift"),
+        // .product(name: "eSpeakNGLib", package: "eSpeakNGSwift"),
+        .product(name: "MisakiSwift", package: "MisakiSwift")
       ],
       resources: [
        .copy("../../Resources/")
