@@ -4,7 +4,7 @@
 import Foundation
 import MLX
 
-class BenchmarkTimer {
+public class BenchmarkTimer {
   private class Timing {
     let id: String
 
@@ -110,7 +110,7 @@ class BenchmarkTimer {
     BenchmarkTimer.shared.reset()
   }
   
-  @inline(__always) static func getTimeInSec(_ id: String) -> Double? {
+  @inline(__always) public static func getTimeInSec(_ id: String) -> Double? {
     BenchmarkTimer.shared.timers[id]?.deltaTime
   }
   
@@ -120,7 +120,7 @@ class BenchmarkTimer {
   @inline(__always) static func stopTimer(_ id: String, _ arrays: [MLXArray] = []) {}
   @inline(__always) static func print() {}
   @inline(__always) static func reset() {}
-  @inline(__always) static func getTimeInSec(_ id: String) -> Double? { 0.0 }
+  @inline(__always) public static func getTimeInSec(_ id: String) -> Double? { 0.0 }
   
   #endif
 }
