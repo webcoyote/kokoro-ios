@@ -1,23 +1,76 @@
 # Kokoro TTS for Swift
 
-Experimental implementation of Kokoro TTS for macOS and iOS devices using MLX Swift and eSpeak NG.
+Kokoro is a high-quality TTS (text-to-speech) model, providing faster than real-time English audio generation.
+
+*NOTE:* This is a SPM package of the TTS engine. For an application integrating Kokoro and showing how the neural speech synthesis works, please see [KokoroTestApp](https://github.com/mlalma/KokoroTestApp) project.
 
 Kokoro TTS port is based on the great work done in [MLX-Audio project](https://github.com/Blaizzy/mlx-audio), where the model was ported from PyTorch to MLX Python. This project ports the MLX Python code to MLX Swift.
 
-The project uses eSpeak NG as a phonemizer, which is different from what the original Kokoro TTS uses. This can and will cause differences in the output audio.
+Currently the library generates audio ~3.3 times faster than real-time on the release build on iPhone 13 Pro after warm up / first run.
 
-Currently the project generates audio ~3.3 times faster than realtime on the release build on iPhone 13 Pro after warm up / first run.
+## Requirements
 
-## Running the sample application
+- iOS 18.0+
+- macOS 15.0+
+- (Other Apple platforms may work as well)
 
-Follow these steps to get the sample application running on your iOS device:
+## Installation
 
-1. Get the weights for the model. You can get the weight file from MLX-Audio project or then download directly from Hugging Face: https://huggingface.co/prince-canuma/Kokoro-82M/blob/main/kokoro-v1_0.safetensors
-2. Copy the weights model file to the `mlxtest/mlxtest/Resources` directory.
-3. Open eSpeak NG project to Xcode.
-4. Choose target `espeak-ng .xcframework` and compile. The script creates to project root on `Frameworks` directory `ESpeakNG.xcframework` file that the TTS engine uses for phonemization.
-5. Open`mlxtest`, change the bundle identifier and fix the signing for running the app on a device.
-6. Run the application!
-7. Enter the text to input field and click "Say something". Wait for a while and the audio should be played out loud.
+Add KokoroSwift to your project using Swift Package Manager:
 
-Note that if you want to run the app on a Mac, you can't use iOS emulator because it doesn't support Metal. Just use the default macOS target. For more information, see [MLX Swift documentation](https://swiftpackageindex.com/ml-explore/mlx-swift/main/documentation/mlx/running-on-ios).
+```swift
+dependencies: [
+    .package(url: "https://github.com/mlalma/kokoro-ios.git", from: "1.0.0")
+]
+```
+
+Then add it to your target:
+
+```swift
+.target(
+    name: "YourTarget",
+    dependencies: [
+        .product(name: "KokoroSwift", package: "kokoro-ios")
+    ]
+)
+```
+
+## Usage
+
+```swift
+import KokoroSwift
+
+// Initialize the TTS engine
+let modelPath = URL(fileURLWithPath: "path/to/your/model")
+let tts = KokoroTTS(modelPath: modelPath, g2p: .misaki)
+
+// Generate speech
+let text = "Hello, this is a test of Kokoro TTS."
+let audioBuffer = try tts.generateAudio(voice: .afHeart, language: .enUS, text: text)
+
+// audioBuffer now contains the synthesized speech
+```
+
+## Available Voices
+
+- `.afHeart` - Female voice
+- `.bmGeorge` - Male voice
+
+## G2P (Grapheme-to-Phoneme) Options
+
+- `.misaki` - MisakiSwift, default G2P processor
+- `.espeak` - eSpeakNG, an alternative G2P processor (commented out in current version)
+
+## Model Files
+
+You'll need to provide your own Kokoro TTS model file due to its large size. Please see example project  how it can be included as a part of the application package.
+
+## Dependencies
+
+This package depends on:
+- [MLX Swift](https://github.com/ml-explore/mlx-swift) - Apple's MLX framework for Swift
+- [MisakiSwift](https://github.com/mlalma/MisakiSwift) - G2P processor
+
+## License
+
+This project is licensed under MIT License - see the [LICENSE](LICENSE) file for details.
