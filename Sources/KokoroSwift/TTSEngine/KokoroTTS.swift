@@ -28,7 +28,6 @@ public class KokoroTTS {
   private let decoder: Decoder!
   private let g2pProcessor: G2PProcessor?
   private var chosenLanguage: Language = .none
-  private var voice: MLXArray!
 
   public init(modelPath: URL, g2p: G2P = .misaki) {
     let sanitizedWeights = WeightLoader.loadWeights(modelPath: modelPath)
@@ -130,7 +129,7 @@ public class KokoroTTS {
     let (bertDur, _) = bert(paddedInputIds, attentionMask: attentionMask)
     let dEn = bertEncoder(bertDur).transposed(0, 2, 1)
 
-    let refS = self.voice[inputIds.count - 1, 0 ... 1, 0...]
+    let refS = voice[inputIds.count - 1, 0 ... 1, 0...]
     let s = refS[0 ... 1, 128...]
     let d = durationEncoder(dEn, style: s, textLengths: inputLengths, m: textMask)
     let (x, _) = predictorLSTM(d)
