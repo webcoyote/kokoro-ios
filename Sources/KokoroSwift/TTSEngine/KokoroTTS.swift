@@ -26,7 +26,7 @@ public class KokoroTTS {
   private let textEncoder: TextEncoder!
   private let decoder: Decoder!
   private let g2pProcessor: G2PProcessor?
-  private var chosenVoice: TTSVoice?
+  private var chosenLanguage: Language = .none
   private var voice: MLXArray!
 
   public init(modelPath: URL, g2p: G2P = .misaki) {
@@ -92,15 +92,14 @@ public class KokoroTTS {
     g2pProcessor = try? G2PFactory.createG2PProcessor(engine: g2p)
   }
 
-  public func generateAudio(voice: TTSVoice, language: Language, text: String, speed: Float = 1.0) throws -> [Float] {
-    if chosenVoice != voice {
-      self.voice = VoiceLoader.loadVoice(voice)
+  public func generateAudio(voice: MLXArray, language: Language, text: String, speed: Float = 1.0) throws -> [Float] {
+    if chosenLanguage != language {
       guard let g2pProcessor else {
         throw G2PProcessorError.processorNotInitialized
       }
       
       try g2pProcessor.setLanguage(language)
-      chosenVoice = voice
+      chosenLanguage = language
     }
 
     BenchmarkTimer.reset()
