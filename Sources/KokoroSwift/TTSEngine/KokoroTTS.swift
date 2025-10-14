@@ -4,6 +4,7 @@
 import Foundation
 import MLX
 import MLXNN
+internal import MLXUtilsLibrary
 
 // Available voices
 public enum TTSVoice {
