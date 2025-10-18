@@ -1,6 +1,6 @@
 # Kokoro TTS for Swift
 
-
+✨ *New in 1.0.5:* Voice styles are moved out of the library to the integrating application. Please check [Kokoro Test App](https://github.com/mlalma/KokoroTestApp) how to use them.
 
 Kokoro is a high-quality TTS (text-to-speech) model, providing faster than real-time English audio generation.
 
@@ -61,7 +61,7 @@ let audioBuffer = try tts.generateAudio(voice: voiceEmbedding, language: .enUS, 
 
 ## Model Files
 
-You'll need to provide your own Kokoro TTS model file due to its large size as well as voice style. Please see example project [KokoroTestApp](https://github.com/mlalma/KokoroTestApp) how they can be included as a part of the application package.
+You'll need to provide your own Kokoro TTS model file due to its large size as well as voice style. Please see example project [Kokoro Test App](https://github.com/mlalma/KokoroTestApp) how they can be included as a part of the application package.
 
 ## Dependencies
 
