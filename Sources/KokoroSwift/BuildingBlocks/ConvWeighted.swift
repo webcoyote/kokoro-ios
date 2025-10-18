@@ -5,62 +5,6 @@ import Foundation
 import MLX
 import MLXNN
 
-func computeNorm(
-  x: MLXArray,
-  p: Int,
-  dim: [Int]? = nil,
-  keepdim: Bool = false
-) -> MLXArray {
-  guard p == 1 || p == 2 else {
-    fatalError("Only p-norms with p of 1 or 2 are supported")
-  }
-
-  let dimensions: [Int]
-  if let dim = dim {
-    dimensions = dim
-  } else {
-    dimensions = Array(0 ..< x.ndim)
-  }
-
-  if p == 1 {
-    // L1 norm
-    return MLX.sum(MLX.abs(x), axes: dimensions, keepDims: keepdim)
-  } else {
-    // L2 norm
-    return MLX.sqrt(MLX.sum(x * x, axes: dimensions, keepDims: keepdim))
-  }
-}
-
-func weightNorm(
-  weightV: MLXArray,
-  weightG: MLXArray,
-  dim: Int? = nil
-) -> MLXArray {
-  let rank = weightV.shape.count
-
-  var axes: [Int]
-
-  if let dim = dim {
-    var adjustedDim = dim
-    if dim < 0 {
-      adjustedDim += rank
-    }
-
-    axes = Array(0 ..< rank)
-    if adjustedDim != -1 {
-      axes.removeAll(where: { $0 == adjustedDim })
-    }
-  } else {
-    axes = Array(0 ..< rank)
-  }
-
-  let normV = computeNorm(x: weightV, p: 2, dim: axes, keepdim: true)
-
-  // Add epsilon for numerical stability
-  let normalizedWeight = weightV / (normV + 1e-7)
-  return normalizedWeight * weightG
-}
-
 /// Conv1d with weight normalization
 class ConvWeighted: Module {
   var weightG: MLXArray
@@ -94,6 +38,62 @@ class ConvWeighted: Module {
     self.bias = bias
 
     super.init()
+  }
+  
+  private func computeNorm(
+    x: MLXArray,
+    p: Int,
+    dim: [Int]? = nil,
+    keepdim: Bool = false
+  ) -> MLXArray {
+    guard p == 1 || p == 2 else {
+      fatalError("Only p-norms with p of 1 or 2 are supported")
+    }
+
+    let dimensions: [Int]
+    if let dim = dim {
+      dimensions = dim
+    } else {
+      dimensions = Array(0 ..< x.ndim)
+    }
+
+    if p == 1 {
+      // L1 norm
+      return MLX.sum(MLX.abs(x), axes: dimensions, keepDims: keepdim)
+    } else {
+      // L2 norm
+      return MLX.sqrt(MLX.sum(x * x, axes: dimensions, keepDims: keepdim))
+    }
+  }
+
+  private func weightNorm(
+    weightV: MLXArray,
+    weightG: MLXArray,
+    dim: Int? = nil
+  ) -> MLXArray {
+    let rank = weightV.shape.count
+
+    var axes: [Int]
+
+    if let dim = dim {
+      var adjustedDim = dim
+      if dim < 0 {
+        adjustedDim += rank
+      }
+
+      axes = Array(0 ..< rank)
+      if adjustedDim != -1 {
+        axes.removeAll(where: { $0 == adjustedDim })
+      }
+    } else {
+      axes = Array(0 ..< rank)
+    }
+
+    let normV = computeNorm(x: weightV, p: 2, dim: axes, keepdim: true)
+
+    // Add epsilon for numerical stability
+    let normalizedWeight = weightV / (normV + 1e-7)
+    return normalizedWeight * weightG
   }
   
   public func callAsFunction(_ x: MLXArray, conv: (MLXArray, MLXArray, Int, Int, Int, Int, StreamOrDevice) -> MLXArray) -> MLXArray {

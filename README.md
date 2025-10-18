@@ -1,5 +1,7 @@
 # Kokoro TTS for Swift
 
+✨ *New in 1.0.5:* Voice styles are moved out of the library to the integrating application. Please check [Kokoro Test App](https://github.com/mlalma/KokoroTestApp) how to use them.
+
 Kokoro is a high-quality TTS (text-to-speech) model, providing faster than real-time English audio generation.
 
 *NOTE:* This is a SPM package of the TTS engine. For an application integrating Kokoro and showing how the neural speech synthesis works, please see [KokoroTestApp](https://github.com/mlalma/KokoroTestApp) project.
@@ -45,16 +47,12 @@ let modelPath = URL(fileURLWithPath: "path/to/your/model")
 let tts = KokoroTTS(modelPath: modelPath, g2p: .misaki)
 
 // Generate speech
+let voiceEmbedding = ... // See KokoroTestApp on how to get a voice style as an `MLXArray`
 let text = "Hello, this is a test of Kokoro TTS."
-let audioBuffer = try tts.generateAudio(voice: .afHeart, language: .enUS, text: text)
+let audioBuffer = try tts.generateAudio(voice: voiceEmbedding, language: .enUS, text: text)
 
 // audioBuffer now contains the synthesized speech
 ```
-
-## Available Voices
-
-- `.afHeart` - Female voice
-- `.bmGeorge` - Male voice
 
 ## G2P (Grapheme-to-Phoneme) Options
 
@@ -63,13 +61,14 @@ let audioBuffer = try tts.generateAudio(voice: .afHeart, language: .enUS, text: 
 
 ## Model Files
 
-You'll need to provide your own Kokoro TTS model file due to its large size. Please see example project  how it can be included as a part of the application package.
+You'll need to provide your own Kokoro TTS model file due to its large size as well as voice style. Please see example project [Kokoro Test App](https://github.com/mlalma/KokoroTestApp) how they can be included as a part of the application package.
 
 ## Dependencies
 
 This package depends on:
 - [MLX Swift](https://github.com/ml-explore/mlx-swift) - Apple's MLX framework for Swift
 - [MisakiSwift](https://github.com/mlalma/MisakiSwift) - G2P processor
+- [MLXUtilsLibrary](https://github.com/mlalma/MLXUtilsLibrary) - Utility library
 
 ## License
 
