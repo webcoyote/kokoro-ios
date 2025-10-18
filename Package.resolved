@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mlalma/MLXUtilsLibrary.git",
       "state" : {
-        "revision" : "15074d058069c8c935a8946f401486c03de8dc31",
-        "version" : "0.0.2"
+        "revision" : "db17d889ca3e5398c285da9c9a33a08d3e191054",
+        "version" : "0.0.3"
       }
     },
     {

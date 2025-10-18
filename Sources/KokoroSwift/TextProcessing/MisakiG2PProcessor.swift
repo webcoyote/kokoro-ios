@@ -3,7 +3,7 @@
 import Foundation
 import MisakiSwift
 
-class MisakiG2PProcessor : G2PProcessor {
+final class MisakiG2PProcessor : G2PProcessor {
   var misaki: EnglishG2P?
   
   func setLanguage(_ language: Language) throws {

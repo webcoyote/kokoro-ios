@@ -3,7 +3,7 @@
 import Foundation
 import eSpeakNGLib
 
-class eSpeakNGG2PProcessor : G2PProcessor {
+final class eSpeakNGG2PProcessor : G2PProcessor {
   private var eSpeakEngine: eSpeakNG?
 
   func setLanguage(_ language: Language) throws {

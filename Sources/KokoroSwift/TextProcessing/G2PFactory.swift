@@ -3,7 +3,7 @@ public enum G2P {
   case eSpeakNG
 }
 
-class G2PFactory {
+final class G2PFactory {
   enum G2PError: Error {
     case noSuchEngine
   }
