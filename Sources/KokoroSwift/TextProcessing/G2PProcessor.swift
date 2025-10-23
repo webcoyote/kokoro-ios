@@ -2,6 +2,7 @@
 //  Kokoro-tts-lib
 //
 import Foundation
+import MLXUtilsLibrary
 
 /// Errors that can occur during G2P (grapheme-to-phoneme) processing.
 enum G2PProcessorError : Error {
@@ -23,7 +24,7 @@ protocol G2PProcessor {
   
   /// Converts input text to phonetic representation.
   /// - Parameter input: The text string to be converted to phonemes.
-  /// - Returns: A phonetic string representation of the input text.
+  /// - Returns: A phonetic string representation of the input text and optionally arrays of tokens.
   /// - Throws: `G2PProcessorError.processorNotInitialized` if `setLanguage(_:)` has not been called.
-  func process(input: String) throws -> String
+  func process(input: String) throws -> (String, [MToken]?)
 }
