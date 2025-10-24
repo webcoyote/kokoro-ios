@@ -20,13 +20,13 @@ class TimestampPredictor {
       return
     }
               
-    let magicDivisor: Double = 80.0
+    let magicDivisor: Float = 80.0
     
     // We track 2 counts, measured in half-frames: (left, right)
     // This way we can cut space characters in half
     // TO_DO: Is -3 an appropriate offset?
-    var left: Double = 0
-    var right: Double = 2 * max(0, predictionDuration[0].item() - 3)
+    var left: Float = 0
+    var right: Float = 2 * max(0, predictionDuration[0].item() - 3)
     left = right
 
     // Updates:
@@ -53,11 +53,11 @@ class TimestampPredictor {
         break
       }
 
-      t.start_ts = left / magicDivisor
-      let tokenDuration: Double = predictionDuration[i..<j].sum().item()
-      let spaceDuration: Double = t.whitespace.isEmpty ? 0.0 : predictionDuration[j].item()
+      t.start_ts = Double(left / magicDivisor)
+      let tokenDuration: Float = predictionDuration[i..<j].sum().item()
+      let spaceDuration: Float = t.whitespace.isEmpty ? 0.0 : predictionDuration[j].item()
       left = right + (2.0 * tokenDuration) + spaceDuration
-      t.end_ts = left / magicDivisor
+      t.end_ts = Double(left / magicDivisor)
       right = left + spaceDuration
       i = j + (t.whitespace.isEmpty ? 0 : 1)
     }
