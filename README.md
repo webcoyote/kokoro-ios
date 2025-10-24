@@ -1,5 +1,7 @@
 # Kokoro TTS for Swift
 
+✨ *New in 1.0.8:* Added timestamps for each token. Please check [Kokoro Test App](https://github.com/mlalma/KokoroTestApp) how to use them.
+
 ✨ *New in 1.0.5:* Voice styles are moved out of the library to the integrating application. Please check [Kokoro Test App](https://github.com/mlalma/KokoroTestApp) how to use them.
 
 Kokoro is a high-quality TTS (text-to-speech) model, providing faster than real-time English audio generation.

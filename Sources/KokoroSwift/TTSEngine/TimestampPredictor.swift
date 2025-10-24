@@ -48,7 +48,7 @@ class TimestampPredictor {
         continue
       }
       
-      var j = i + t.phonemes!.count
+      let j = i + t.phonemes!.count
       if j >= predictionDuration.shape[0] {
         break
       }
