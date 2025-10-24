@@ -216,6 +216,11 @@ public final class KokoroTTS {
       s: acousticStyle
     )[0]
     
+    // Try to predict timestamp of each token if G2P processor returns tokens
+    if let tokenArray {
+      TimestampPredictor.preditTimestamps(tokens: tokenArray, predictionDuration: predictedDurations)
+    }
+    
     // Stop performance timing
     BenchmarkTimer.stopTimer(Constants.bm_TTS)
 
