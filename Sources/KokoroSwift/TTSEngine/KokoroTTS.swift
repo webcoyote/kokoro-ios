@@ -165,7 +165,7 @@ public final class KokoroTTS {
   /// - Returns: Array of audio samples as Float values
   /// - Throws: `KokoroTTSError.tooManyTokens` if text is too long,
   ///           or `G2PProcessorError` if G2P processing fails
-  public func generateAudio(voice: MLXArray, language: Language, text: String, speed: Float = 1.0) throws -> [Float] {
+  public func generateAudio(voice: MLXArray, language: Language, text: String, speed: Float = 1.0) throws -> ([Float], [MToken]?) {
     // Update language if it has changed
     try updateLanguageIfNeeded(language)
 
@@ -224,7 +224,7 @@ public final class KokoroTTS {
     // Stop performance timing
     BenchmarkTimer.stopTimer(Constants.bm_TTS)
 
-    return audio[0].asArray(Float.self)
+    return (audio[0].asArray(Float.self), tokenArray)
   }
   
   /// Updates the G2P language if it differs from the current language.
