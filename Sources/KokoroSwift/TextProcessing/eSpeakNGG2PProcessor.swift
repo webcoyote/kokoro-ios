@@ -32,9 +32,10 @@ final class eSpeakNGG2PProcessor : G2PProcessor {
   /// - Parameter input: The text string to be converted to phonemes.
   /// - Returns: A phonetic string representation of the input text.
   /// - Throws: `G2PProcessorError.processorNotInitialized` if `setLanguage(_:)` has not been called.
-  func process(input: String) throws -> String {
+  func process(input: String) throws -> (String, [MToken]?) {
     guard let eSpeakEngine else { throw G2PProcessorError.processorNotInitialized }
-    return try eSpeakEngine.phonemize(text: input)
+    let phonemizedText = try eSpeakEngine.phonemize(text: input)
+    return (phonemizedText, nil)
   }
 }
 

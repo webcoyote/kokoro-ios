@@ -5,6 +5,7 @@
 
 import Foundation
 import MisakiSwift
+import MLXUtilsLibrary
 
 /// A G2P processor that uses the MisakiSwift library for English phonemization.
 /// Requires the MisakiSwift framework to be available at compile time.
@@ -30,11 +31,11 @@ final class MisakiG2PProcessor : G2PProcessor {
   
   /// Converts input text to phonetic representation.
   /// - Parameter input: The text string to be converted to phonemes.
-  /// - Returns: A phonetic string representation of the input text.
+  /// - Returns: A phonetic string representation of the input text and arrays of tokens.
   /// - Throws: `G2PProcessorError.processorNotInitialized` if `setLanguage(_:)` has not been called.
-  func process(input: String) throws -> String {
+  func process(input: String) throws -> (String, [MToken]?) {
     guard let misaki else { throw G2PProcessorError.processorNotInitialized }
-    return misaki.phonemize(text: input).0
+    return misaki.phonemize(text: input)
   }
 }
 
