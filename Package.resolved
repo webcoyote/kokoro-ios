@@ -1,13 +1,13 @@
 {
-  "originHash" : "855893a51d68f76c58d24677bfa64c84b73f220fd4bde444e64230a62649a476",
+  "originHash" : "8aeaa3854682474dd56fc6377e3064664e7a76d8c4d1701f53bfdb10f5b6db80",
   "pins" : [
     {
       "identity" : "misakiswift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/webcoyote/MisakiSwift",
       "state" : {
-        "revision" : "15866ec23a2d9725a3d7ac28fd3bb9314fc66fa2",
-        "version" : "1.0.4"
+        "revision" : "28f97318eaa5a1dfdc1aeb07b4451fee344b321e",
+        "version" : "1.0.5"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/webcoyote/MLXUtilsLibrary.git",
       "state" : {
-        "revision" : "b4088c784d4b5b37a5f96a50ce4e7c4baf81686d",
-        "version" : "0.0.5"
+        "revision" : "ac0fe4b629470f90a677061b8d90833e32081375",
+        "version" : "0.0.6"
       }
     },
     {
